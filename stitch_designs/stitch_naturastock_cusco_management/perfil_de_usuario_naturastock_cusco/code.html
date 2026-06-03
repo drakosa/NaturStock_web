@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NaturaStock Cusco - Mi Perfil</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .bento-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .bento-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(45, 90, 39, 0.08);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#a1d494",
+                        "on-tertiary-fixed-variant": "#454744",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#bcf0ae",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c7c2",
+                        "secondary-fixed": "#ccebc7",
+                        "inverse-surface": "#213145",
+                        "on-surface": "#0b1c30",
+                        "surface": "#f8f9ff",
+                        "on-primary-fixed": "#002201",
+                        "on-primary-container": "#9dd090",
+                        "tertiary-container": "#4f514d",
+                        "on-tertiary-container": "#c3c3bf",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#cbdbf5",
+                        "tertiary-fixed": "#e3e3de",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "primary": "#154212",
+                        "outline": "#72796e",
+                        "on-tertiary-fixed": "#1a1c19",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-container": "#2d5a27",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#383a37",
+                        "on-surface-variant": "#42493e",
+                        "surface-container-low": "#eff4ff",
+                        "on-background": "#0b1c30",
+                        "on-primary-fixed-variant": "#23501e",
+                        "secondary-fixed-dim": "#b0cfad",
+                        "surface-container-high": "#dce9ff",
+                        "primary-fixed-dim": "#a1d494",
+                        "secondary": "#4a6549",
+                        "surface-bright": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-container": "#506b4f",
+                        "outline-variant": "#c2c9bb",
+                        "on-secondary-fixed-variant": "#334d33",
+                        "background": "#f8f9ff",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#3b6934",
+                        "on-secondary-fixed": "#07200b",
+                        "secondary-container": "#ccebc7",
+                        "surface-container": "#e5eeff",
+                        "surface-variant": "#d3e4fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "gutter": "24px",
+                        "margin-desktop": "40px",
+                        "xs": "4px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-primary dark:bg-surface-container-lowest border-r border-outline-variant/30 dark:border-outline-variant shadow-md flex flex-col h-full py-xl z-50">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-md text-headline-md font-bold text-on-primary dark:text-primary tracking-tight">NaturaStock Cusco</h1>
+<p class="text-on-primary/60 dark:text-primary/60 font-label-sm text-label-sm uppercase mt-xs">Enterprise Logistics</p>
+</div>
+<nav class="flex-1 px-sm space-y-xs">
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200 font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200 font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Products</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200 font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="warehouse">warehouse</span>
+<span>Inventory</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200 font-label-md text-label-md rounded-lg group" href="#">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span>Reports</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md border-l-4 border-inverse-primary bg-on-primary/10 text-on-primary font-bold font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span>Profile</span>
+</a>
+</nav>
+<div class="mt-auto px-sm pt-xl border-t border-on-primary/10 space-y-xs">
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200 font-label-md text-label-md rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200 font-label-md text-label-md rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="flex justify-between items-center h-16 ml-[280px] px-margin-desktop w-[calc(100%-280px)] bg-surface dark:bg-surface-dim border-b border-outline-variant/50 sticky top-0 z-40">
+<div class="flex items-center gap-md w-1/2">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container-low border-none rounded-full pl-xl pr-md py-sm text-body-md focus:ring-2 focus:ring-primary/20 placeholder:text-on-surface-variant/50" placeholder="Buscar en NaturaStock..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<button class="relative p-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface"></span>
+</button>
+<button class="p-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer">
+<span class="material-symbols-outlined" data-icon="apps">apps</span>
+</button>
+<div class="h-8 w-px bg-outline-variant/50 mx-sm"></div>
+<div class="flex items-center gap-md">
+<span class="text-right hidden sm:block">
+<p class="font-label-md text-label-md text-on-surface">Juan Pérez</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Gerente de Almacén</p>
+</span>
+<img alt="User profile" class="w-10 h-10 rounded-full object-cover border-2 border-primary-container" data-alt="A professional portrait of a Hispanic man in his 40s, wearing a clean, high-quality white polo shirt. He has a warm, confident smile and is standing in a brightly lit, modern architectural space with blurred botanical plants in the background. The lighting is soft and natural, emphasizing a botanical professional aesthetic with clean greens and whites." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFpuYHK4v5tnaQk0AV7etBNPZ7ylbXhUnelvCeTFqw51U_nQH3WvGtenv7M0ckltwPFRgwATVC69zFub3r7nwqyarbEU1CHIbI6SXAh2vExds5vvDP59-HhOQtC7LkIhxoriU10sQF8zmqY3IxgiEskTNttjan6x3gkVbo_1s0920ZX6RUQmS4a89SBP9owmHe8AcWizeC-YozbkmPavZ2rvmkt8yvedqavtw2ld9ersOKGf1ASO10WpzTbmnbiLN3LJ3euDq9muW7"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-[280px] p-margin-desktop">
+<div class="max-w-6xl mx-auto">
+<!-- Header Section -->
+<div class="mb-xl flex justify-between items-end">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-primary tracking-tight">Mi Perfil</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-xs">Gestiona tu información personal y preferencias de cuenta.</p>
+</div>
+<div class="flex gap-md">
+<button class="px-lg py-md border-2 border-primary text-primary font-label-md text-label-md rounded-xl hover:bg-primary/5 transition-all active:scale-[0.98] flex items-center gap-sm">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+                        Editar Perfil
+                    </button>
+<button class="px-lg py-md bg-error text-on-error font-label-md text-label-md rounded-xl hover:opacity-90 transition-all active:scale-[0.98] flex items-center gap-sm shadow-lg shadow-error/20">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                        Cerrar Sesión
+                    </button>
+</div>
+</div>
+<!-- Profile Content Grid (Bento Style) -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Main Identity Card -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest border border-outline-variant/30 rounded-xl p-xl shadow-sm bento-card relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+<div class="relative flex flex-col md:flex-row gap-xl items-start">
+<div class="relative">
+<img class="w-40 h-40 rounded-3xl object-cover shadow-xl border-4 border-surface" data-alt="A close-up professional headshot of Juan Pérez, a Hispanic male warehouse manager. He exhibits a calm authority and is set against a backdrop of organized, sustainable warehouse shelving with subtle greenery peeking through. The image uses a soft, natural lighting palette of forest greens and warm wood tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuc8FVEKQykxpIqm5gULFL_FRB1IHX2-yxhfKXED9M4eGZ1A3hgaC1jHv2OTl4S4ONE_xGPHnN7i0ZEu4UU_MpMYinEyGSDc2TSs4Bq1xZa3hYPVqbo9sfMusSsXanQ_1O3jL-2R2ITkKL6EnQ_B1oKmofUxw8Im37Yk_1Zll3K6PryuIBakNB1vDl7DSrPFpxDFPmI620qZvKFUXCZXv2JZ4uzLiDmjqqIYQ_UVUjFVeYlwoCqpL582B9fZf_fFRmkppKhINI0Bgk"/>
+<button class="absolute -bottom-2 -right-2 bg-primary text-on-primary p-sm rounded-full shadow-lg hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="photo_camera">photo_camera</span>
+</button>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-sm mb-xs">
+<span class="px-sm py-1 bg-secondary-container text-on-secondary-container rounded-full font-label-sm text-label-sm">Activo</span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">• Miembro desde Feb 2023</span>
+</div>
+<h3 class="font-headline-lg text-headline-lg text-primary mb-xs">Juan Pérez</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-md">Gerente de Almacén — Sede Cusco</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg mt-xl">
+<div class="space-y-xs">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Correo Electrónico</p>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary/60" data-icon="mail">mail</span>
+<p class="font-body-md text-body-md font-semibold">juan.perez@naturastock.pe</p>
+</div>
+</div>
+<div class="space-y-xs">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Teléfono</p>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary/60" data-icon="call">call</span>
+<p class="font-body-md text-body-md font-semibold">+51 984 123 456</p>
+</div>
+</div>
+<div class="space-y-xs">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Ubicación</p>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary/60" data-icon="location_on">location_on</span>
+<p class="font-body-md text-body-md font-semibold">Planta Principal, Cusco</p>
+</div>
+</div>
+<div class="space-y-xs">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Turno</p>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary/60" data-icon="schedule">schedule</span>
+<p class="font-body-md text-body-md font-semibold">Matutino (07:00 - 16:00)</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Stats / Quick Info -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Activity Stats -->
+<div class="bg-primary p-lg rounded-xl shadow-lg shadow-primary/10 bento-card text-on-primary">
+<div class="flex justify-between items-start mb-md">
+<span class="material-symbols-outlined text-primary-fixed bg-on-primary/10 p-sm rounded-lg" data-icon="trending_up">trending_up</span>
+<span class="font-label-sm text-label-sm text-primary-fixed">+12% este mes</span>
+</div>
+<p class="font-label-md text-label-md opacity-80">Entradas Procesadas</p>
+<h4 class="font-headline-lg text-headline-lg font-bold">1,482</h4>
+<div class="mt-xl h-2 bg-on-primary/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary-fixed" style="width: 75%"></div>
+</div>
+</div>
+<!-- Security Card -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 p-lg rounded-xl shadow-sm bento-card">
+<h4 class="font-label-md text-label-md text-primary mb-md">Seguridad de la Cuenta</h4>
+<div class="space-y-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="verified_user">verified_user</span>
+<span class="font-body-sm text-body-sm">2FA Activado</span>
+</div>
+<span class="w-10 h-5 bg-primary/20 rounded-full relative cursor-pointer">
+<span class="absolute right-1 top-1 w-3 h-3 bg-primary rounded-full"></span>
+</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="history">history</span>
+<span class="font-body-sm text-body-sm">Último acceso</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Hace 2 horas</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Inventory Management Progress / Extra Sections -->
+<div class="col-span-12 md:col-span-6 bg-surface-container-lowest border border-outline-variant/30 p-xl rounded-xl shadow-sm bento-card">
+<h4 class="font-headline-md text-headline-md text-primary mb-lg">Próximas Tareas</h4>
+<ul class="space-y-md">
+<li class="flex items-start gap-md p-md bg-surface-container-low rounded-lg border-l-4 border-primary">
+<span class="material-symbols-outlined text-primary mt-xs" data-icon="inventory">inventory</span>
+<div>
+<p class="font-label-md text-label-md">Inventario Semestral</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Revisión de stock sección A-14.</p>
+<p class="font-label-sm text-label-sm text-primary mt-xs">Mañana, 09:00 AM</p>
+</div>
+</li>
+<li class="flex items-start gap-md p-md hover:bg-surface-container-low rounded-lg transition-colors group">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary mt-xs" data-icon="local_shipping">local_shipping</span>
+<div>
+<p class="font-label-md text-label-md">Despacho Natura-Lima</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Validación de 45 unidades de aceites.</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-xs">Vie, 14 Jul</p>
+</div>
+</li>
+</ul>
+</div>
+<!-- Personal Preferences -->
+<div class="col-span-12 md:col-span-6 bg-surface-container-lowest border border-outline-variant/30 p-xl rounded-xl shadow-sm bento-card">
+<h4 class="font-headline-md text-headline-md text-primary mb-lg">Preferencias</h4>
+<div class="space-y-lg">
+<div class="flex items-center justify-between">
+<div>
+<p class="font-label-md text-label-md">Notificaciones Push</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Alertas de stock crítico en tiempo real.</p>
+</div>
+<span class="w-10 h-5 bg-primary/20 rounded-full relative cursor-pointer">
+<span class="absolute right-1 top-1 w-3 h-3 bg-primary rounded-full"></span>
+</span>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="font-label-md text-label-md">Modo Oscuro</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Ajustar interfaz para baja luminosidad.</p>
+</div>
+<span class="w-10 h-5 bg-outline-variant/30 rounded-full relative cursor-pointer">
+<span class="absolute left-1 top-1 w-3 h-3 bg-on-surface-variant rounded-full"></span>
+</span>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<p class="font-label-md text-label-md">Idioma del Sistema</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Español (Latinoamérica)</p>
+</div>
+<span class="material-symbols-outlined text-primary" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Background Decoration -->
+<div class="fixed top-0 right-0 -z-10 opacity-10 pointer-events-none">
+<svg fill="none" height="600" viewbox="0 0 600 600" width="600" xmlns="http://www.w3.org/2000/svg">
+<path d="M600 300C600 465.685 465.685 600 300 600C134.315 600 0 465.685 0 300C0 134.315 134.315 0 300 0C465.685 0 600 134.315 600 300Z" fill="url(#paint0_radial)"></path>
+<defs>
+<radialgradient cx="0" cy="0" gradienttransform="translate(300 300) rotate(90) scale(300)" gradientunits="userSpaceOnUse" id="paint0_radial" r="1">
+<stop stop-color="#154212"></stop>
+<stop offset="1" stop-color="#F8F9FF" stop-opacity="0"></stop>
+</radialgradient>
+</defs>
+</svg>
+</div>
+<script>
+        // Micro-interaction for buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.style.transform = 'scale(0.96)';
+            });
+            button.addEventListener('mouseup', () => {
+                button.style.transform = '';
+            });
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = '';
+            });
+        });
+
+        // Add visual feedback to toggles (mock logic)
+        document.querySelectorAll('.cursor-pointer.relative').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const dot = this.querySelector('span');
+                const isOff = dot.classList.contains('left-1');
+                
+                if (isOff) {
+                    dot.classList.remove('left-1');
+                    dot.classList.add('right-1');
+                    this.classList.remove('bg-outline-variant/30');
+                    this.classList.add('bg-primary/20');
+                    dot.classList.remove('bg-on-surface-variant');
+                    dot.classList.add('bg-primary');
+                } else {
+                    dot.classList.add('left-1');
+                    dot.classList.remove('right-1');
+                    this.classList.add('bg-outline-variant/30');
+                    this.classList.remove('bg-primary/20');
+                    dot.classList.add('bg-on-surface-variant');
+                    dot.classList.remove('bg-primary');
+                }
+            });
+        });
+    </script>
+</body></html>

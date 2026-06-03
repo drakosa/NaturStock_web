@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#a1d494",
+                    "on-tertiary-fixed-variant": "#454744",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed": "#bcf0ae",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#c6c7c2",
+                    "secondary-fixed": "#ccebc7",
+                    "inverse-surface": "#213145",
+                    "on-surface": "#0b1c30",
+                    "surface": "#f8f9ff",
+                    "on-primary-fixed": "#002201",
+                    "on-primary-container": "#9dd090",
+                    "tertiary-container": "#4f514d",
+                    "on-tertiary-container": "#c3c3bf",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#cbdbf5",
+                    "tertiary-fixed": "#e3e3de",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "primary": "#154212",
+                    "outline": "#72796e",
+                    "on-tertiary-fixed": "#1a1c19",
+                    "inverse-on-surface": "#eaf1ff",
+                    "primary-container": "#2d5a27",
+                    "on-secondary": "#ffffff",
+                    "tertiary": "#383a37",
+                    "on-surface-variant": "#42493e",
+                    "surface-container-low": "#eff4ff",
+                    "on-background": "#0b1c30",
+                    "on-primary-fixed-variant": "#23501e",
+                    "secondary-fixed-dim": "#b0cfad",
+                    "surface-container-high": "#dce9ff",
+                    "primary-fixed-dim": "#a1d494",
+                    "secondary": "#4a6549",
+                    "surface-bright": "#f8f9ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-secondary-container": "#506b4f",
+                    "outline-variant": "#c2c9bb",
+                    "on-secondary-fixed-variant": "#334d33",
+                    "background": "#f8f9ff",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#3b6934",
+                    "on-secondary-fixed": "#07200b",
+                    "secondary-container": "#ccebc7",
+                    "surface-container": "#e5eeff",
+                    "surface-variant": "#d3e4fe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "4px",
+                    "margin-mobile": "16px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "gutter": "24px",
+                    "margin-desktop": "40px",
+                    "xs": "4px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9ff; }
+        .organic-shadow { box-shadow: 0px 4px 12px rgba(45, 90, 39, 0.05); }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-primary flex flex-col py-xl border-r border-outline-variant/30 shadow-md z-50">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-md text-headline-md font-bold text-on-primary">NaturaStock Cusco</h1>
+<p class="font-label-sm text-label-sm text-on-primary/70 uppercase tracking-widest mt-xs">Enterprise Logistics</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md border-l-4 border-inverse-primary bg-on-primary/10 text-on-primary font-bold" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Products</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-all" href="#">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-all" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-all" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+<div class="mt-auto pt-xl border-t border-on-primary/10">
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-all" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 ml-[280px] px-margin-desktop w-[calc(100%-280px)] bg-surface border-b border-outline-variant/50 sticky top-0 z-40">
+<div class="flex items-center gap-md bg-surface-container-low px-md py-xs rounded-full border border-outline-variant/30 w-96">
+<span class="material-symbols-outlined text-on-surface-variant">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-full placeholder:text-on-surface-variant/50" placeholder="Search inventory..." type="text"/>
+</div>
+<div class="flex items-center gap-lg">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">notifications</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors cursor-pointer">apps</button>
+<div class="flex items-center gap-sm">
+<img alt="User profile" class="w-8 h-8 rounded-full bg-secondary-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWKwxuJ-uy353cT-nHnFZLY6VegPRDNJKbrPjORNGSPNNkwyn1zOgBZ6TyOIhN9m-xiNu2S92nE9tV_ixtCRiJ3-pI4o4_LWrgH2YLBVm5aLtgMsuNwak0h5DbFKq9NEJqtSFJ9NVLbIEYDN8r8xIEGg0ZzPLI575xbAyFgyI-KOmWHLPz6r9l3yhIjS3exds-rIb34vI_TYOdaGXoLy6meLq48pTMw3qWzN9JdytZczikUtkiYJAqpzW1xKsDwDseIW8KaVg6o_hb"/>
+<span class="font-label-md text-label-md text-on-surface">Admin User</span>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[280px] p-margin-desktop flex justify-center">
+<div class="w-full max-w-4xl animate-in fade-in slide-in-from-bottom-4 duration-700">
+<!-- Header Section -->
+<div class="flex items-center justify-between mb-xl">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-primary">Registrar Nuevo Producto</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Añada un nuevo artículo al catálogo de NaturaStock Cusco.</p>
+</div>
+<button class="flex items-center gap-xs px-md py-sm rounded-lg text-primary hover:bg-primary/5 transition-colors font-label-md text-label-md" onclick="window.history.back()">
+<span class="material-symbols-outlined">arrow_back</span>
+                    Volver
+                </button>
+</div>
+<!-- Form Card -->
+<div class="bg-surface-container-lowest organic-shadow rounded-xl border border-outline-variant/30 overflow-hidden">
+<div class="grid grid-cols-1 md:grid-cols-12">
+<!-- Form Side -->
+<form class="md:col-span-8 p-xl space-y-lg">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="md:col-span-2">
+<label class="block font-label-md text-label-md text-on-surface mb-xs">Nombre del Producto</label>
+<input class="w-full px-md py-sm rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-body-md" placeholder="Ej. Aceite Esencial de Eucalipto" type="text"/>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-xs">Categoría</label>
+<select class="w-full px-md py-sm rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-body-md bg-white">
+<option value="">Seleccionar categoría</option>
+<option value="aceites">Aceites Naturales</option>
+<option value="hierbas">Hierbas Medicinales</option>
+<option value="cosmetica">Cosmética Botánica</option>
+<option value="suplementos">Suplementos</option>
+</select>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-xs">Precio (S/.)</label>
+<input class="w-full px-md py-sm rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-body-md text-right" placeholder="0.00" step="0.01" type="number"/>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-xs">Stock</label>
+<input class="w-full px-md py-sm rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-body-md text-right" placeholder="0" type="number"/>
+</div>
+</div>
+<div class="md:col-span-2">
+<label class="block font-label-md text-label-md text-on-surface mb-xs">Descripción</label>
+<textarea class="w-full px-md py-sm rounded-lg border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none text-body-md resize-none" placeholder="Describa las propiedades y el origen botánico del producto..." rows="4"></textarea>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-md pt-md border-t border-outline-variant/30">
+<button class="flex-1 bg-primary text-on-primary px-lg py-md rounded-lg font-label-md text-label-md hover:brightness-110 active:scale-[0.98] transition-all flex justify-center items-center gap-sm" type="submit">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">save</span>
+                                Guardar Producto
+                            </button>
+<button class="flex-1 bg-transparent border border-outline-variant text-primary px-lg py-md rounded-lg font-label-md text-label-md hover:bg-primary/5 active:scale-[0.98] transition-all" type="button">
+                                Cancelar
+                            </button>
+</div>
+</form>
+<!-- Image Upload Side -->
+<div class="md:col-span-4 bg-tertiary-fixed/30 p-xl flex flex-col items-center justify-center border-l border-outline-variant/30">
+<label class="font-label-md text-label-md text-on-surface mb-lg text-center">Imagen del Producto</label>
+<div class="relative group cursor-pointer w-full aspect-square max-w-[240px] bg-white rounded-xl border-2 border-dashed border-outline-variant hover:border-primary transition-colors flex flex-col items-center justify-center p-md overflow-hidden">
+<input class="absolute inset-0 opacity-0 cursor-pointer z-10" type="file"/>
+<div class="text-center group-hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-[48px] text-primary/40 mb-md">add_a_photo</span>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Click para subir<br/>o arrastrar archivo</p>
+<p class="text-[10px] text-on-surface-variant/60 mt-sm">JPG, PNG (Máx 5MB)</p>
+</div>
+<!-- Decorative background effect -->
+<div class="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+</div>
+<div class="mt-xl w-full p-md bg-white/60 rounded-lg border border-outline-variant/20">
+<div class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary text-[18px]">info</span>
+<p class="text-[12px] leading-relaxed text-on-surface-variant">
+                                    Las imágenes con fondo neutro y luz natural mejoran la visualización en el catálogo de Cusco.
+                                </p>
+</div>
+</div>
+<div class="mt-lg w-full h-40 rounded-xl overflow-hidden shadow-inner relative group">
+<img alt="Preview Example" class="w-full h-full object-cover filter sepia-[0.2] contrast-[1.05]" data-alt="A professional high-angle still life photograph of various organic botanical products and dried herbs arranged on a rustic light wooden surface. The lighting is soft and natural, emphasizing textures and the deep earthy greens and neutral tones of the Cusco landscape. The overall mood is clean, clinical yet warm, reflecting a premium pharmacy or apothecary aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmxwDLTJznSEiK4wYa-Nif8OeynCN1IwxEfBXEmSTakj4Zz_Hn7qtvDEVLOPjkUet3JUCn5La3QccY68_tdqvnk8-TWS8rQh355lsLH5Ve9VnQWaNRMhpf07K_OgUR4gWypgKwSzXFvyAidtvyXs0MCW1yomsSF4A7OOsX98LYGdAzvXiWf-zmt-vqZN9PgMAsuLIe7_PSc0OATMgxN5GD9qsFlmLRg7QjNIGskKfou7kU3OD0KxdZE2etMmAuCme_jK3fzLubRc28"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-sm">
+<span class="text-white text-[10px] font-medium opacity-80 uppercase tracking-tighter">Vista previa sugerida</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Additional Help/Footer -->
+<div class="mt-lg flex items-center justify-between px-md">
+<div class="flex items-center gap-sm">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Conectado a NaturaStock Cusco Central</p>
+</div>
+<div class="flex gap-md">
+<a class="text-label-sm font-label-sm text-primary hover:underline" href="#">Guía de SKU</a>
+<a class="text-label-sm font-label-sm text-primary hover:underline" href="#">Políticas de Inventario</a>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple micro-interaction for form inputs
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.querySelector('label')?.classList.add('text-primary');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.querySelector('label')?.classList.remove('text-primary');
+            });
+        });
+
+        // Simple button interaction
+        const primaryBtn = document.querySelector('button[type="submit"]');
+        primaryBtn.addEventListener('click', (e) => {
+            if(!e.target.closest('form').checkValidity()) return;
+            e.preventDefault();
+            primaryBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Guardando...';
+            setTimeout(() => {
+                primaryBtn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> ¡Guardado!';
+                setTimeout(() => {
+                    primaryBtn.innerHTML = '<span class="material-symbols-outlined" style="font-variation-settings: \'FILL\' 1;">save</span> Guardar Producto';
+                }, 2000);
+            }, 1500);
+        });
+    </script>
+</body></html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NaturaStock Cusco - Gestión de Productos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-primary": "#a1d494",
+                        "on-tertiary-fixed-variant": "#454744",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#bcf0ae",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#c6c7c2",
+                        "secondary-fixed": "#ccebc7",
+                        "inverse-surface": "#213145",
+                        "on-surface": "#0b1c30",
+                        "surface": "#f8f9ff",
+                        "on-primary-fixed": "#002201",
+                        "on-primary-container": "#9dd090",
+                        "tertiary-container": "#4f514d",
+                        "on-tertiary-container": "#c3c3bf",
+                        "on-error-container": "#93000a",
+                        "surface-dim": "#cbdbf5",
+                        "tertiary-fixed": "#e3e3de",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "primary": "#154212",
+                        "outline": "#72796e",
+                        "on-tertiary-fixed": "#1a1c19",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-container": "#2d5a27",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#383a37",
+                        "on-surface-variant": "#42493e",
+                        "surface-container-low": "#eff4ff",
+                        "on-background": "#0b1c30",
+                        "on-primary-fixed-variant": "#23501e",
+                        "secondary-fixed-dim": "#b0cfad",
+                        "surface-container-high": "#dce9ff",
+                        "primary-fixed-dim": "#a1d494",
+                        "secondary": "#4a6549",
+                        "surface-bright": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "on-secondary-container": "#506b4f",
+                        "outline-variant": "#c2c9bb",
+                        "on-secondary-fixed-variant": "#334d33",
+                        "background": "#f8f9ff",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#3b6934",
+                        "on-secondary-fixed": "#07200b",
+                        "secondary-container": "#ccebc7",
+                        "surface-container": "#e5eeff",
+                        "surface-variant": "#d3e4fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "margin-mobile": "16px",
+                        "sm": "8px",
+                        "md": "16px",
+                        "xl": "32px",
+                        "gutter": "24px",
+                        "margin-desktop": "40px",
+                        "xs": "4px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "headline-xl": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8f9ff; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c2c9bb; border-radius: 10px; }
+        .table-row-hover:hover { background-color: rgba(229, 238, 255, 0.4); transition: background-color 0.2s; }
+    </style>
+</head>
+<body class="text-on-background overflow-hidden">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-primary dark:bg-surface-container-lowest shadow-md border-r border-outline-variant/30 dark:border-outline-variant z-50 flex flex-col py-xl">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-md text-headline-md font-bold text-on-primary dark:text-primary mb-1">NaturaStock Cusco</h1>
+<p class="font-label-md text-label-md text-on-primary/70 dark:text-primary/60">Enterprise Logistics</p>
+</div>
+<nav class="flex-grow space-y-xs overflow-y-auto custom-scrollbar">
+<!-- Navigation Items Mapping -->
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md border-l-4 border-inverse-primary bg-on-primary/10 text-on-primary font-bold transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-label-md text-label-md">Products</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">warehouse</span>
+<span class="font-label-md text-label-md">Inventory</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="flex items-center gap-md px-lg py-md text-on-primary/70 hover:text-on-primary hover:bg-on-primary/5 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+</nav>
+<div class="mt-auto px-lg pt-xl border-t border-on-primary/10">
+<a class="flex items-center gap-md py-md text-on-primary/70 hover:text-on-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-md py-md text-on-primary/70 hover:text-on-primary transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Layout -->
+<div class="ml-[280px] w-[calc(100%-280px)] h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center h-16 px-margin-desktop bg-surface dark:bg-surface-dim border-b border-outline-variant/50 z-40">
+<div class="flex items-center bg-surface-container-low rounded-lg px-md py-xs w-96">
+<span class="material-symbols-outlined text-on-surface-variant mr-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md w-full placeholder-on-surface-variant" placeholder="Buscar productos..." type="text"/>
+</div>
+<div class="flex items-center gap-lg">
+<button class="material-symbols-outlined text-primary hover:text-primary-container transition-colors cursor-pointer">notifications</button>
+<button class="material-symbols-outlined text-primary hover:text-primary-container transition-colors cursor-pointer">apps</button>
+<div class="h-10 w-10 rounded-full overflow-hidden border-2 border-primary-container">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="A professional headshot of a Hispanic warehouse manager in a bright, modern office setting. He is smiling slightly, conveying confidence and expertise. The lighting is soft and natural, emphasizing a high-end corporate atmosphere with botanical green accents in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLjhxNmXIKTQP_CYAGxkkVaUtiIw98zvarPfeROohWLkts8vSl065l2xd_bZenJehkFbe0n2ymaFdB3oCNxCiFROm3i8uOJpzsC3o3VbZ7sh_F5gOA7t2GZEsEGjettDWO3Kt6cx7jENh-LKbaMs8gFRq1vfEEZ6KnsqPWquooQRIEWFHb2AQnMcvdWJ-WVbSF6Q1QBcS5Q0KxQT9GwWXB0eY_XBvZDcD3VPRI9HQq8_oZ0dsn35E2AlXuEj79No3glA2c8pAA9RxO"/>
+</div>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="flex-grow p-margin-desktop overflow-y-auto custom-scrollbar bg-background">
+<!-- Page Header Area -->
+<div class="flex justify-between items-end mb-xl">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-primary mb-xs">Gestión de Productos</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Monitorea y organiza el catálogo botánico de NaturaStock.</p>
+</div>
+<button class="bg-primary hover:bg-primary-container text-on-primary px-lg py-md rounded-lg flex items-center gap-sm shadow-md transition-all active:scale-95">
+<span class="material-symbols-outlined">add</span>
+<span class="font-label-md text-label-md">+ Agregar Producto</span>
+</button>
+</div>
+<!-- Dashboard Stats Micro-cards -->
+<div class="grid grid-cols-4 gap-gutter mb-xl">
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30">
+<div class="flex justify-between items-start mb-sm">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-sm rounded-lg">eco</span>
+<span class="text-primary font-bold text-label-sm">+12%</span>
+</div>
+<p class="text-on-surface-variant font-label-sm">Total Productos</p>
+<p class="text-headline-md font-headline-md text-on-surface">1,284</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30">
+<div class="flex justify-between items-start mb-sm">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-sm rounded-lg">warning</span>
+<span class="text-error font-bold text-label-sm">8 Critical</span>
+</div>
+<p class="text-on-surface-variant font-label-sm">Bajo Stock</p>
+<p class="text-headline-md font-headline-md text-on-surface">42</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30">
+<div class="flex justify-between items-start mb-sm">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-sm rounded-lg">payments</span>
+</div>
+<p class="text-on-surface-variant font-label-sm">Valor de Inventario</p>
+<p class="text-headline-md font-headline-md text-on-surface">$45.2k</p>
+</div>
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant/30">
+<div class="flex justify-between items-start mb-sm">
+<span class="material-symbols-outlined text-primary bg-primary/10 p-sm rounded-lg">local_shipping</span>
+</div>
+<p class="text-on-surface-variant font-label-sm">En Tránsito</p>
+<p class="text-headline-md font-headline-md text-on-surface">15 Envios</p>
+</div>
+</div>
+<!-- Professional Data Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 overflow-hidden">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant/50 sticky top-0 z-10">
+<tr>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant">Nombre</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant">Categoría</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant text-right">Precio</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant text-right">Stock</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant">Estado</th>
+<th class="px-lg py-md font-label-md text-label-md text-on-surface-variant text-center">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<!-- Row 1 -->
+<tr class="table-row-hover">
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">filter_vintage</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Aceite de Eucalipto</p>
+<p class="text-label-sm text-on-surface-variant">SKU-2024-001</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="bg-surface-container-highest text-on-surface-variant px-sm py-xs rounded text-label-sm">Esenciales</span>
+</td>
+<td class="px-lg py-md text-right font-label-md text-on-surface">$24.50</td>
+<td class="px-lg py-md text-right font-label-md text-on-surface">850</td>
+<td class="px-lg py-md">
+<span class="bg-primary/10 text-primary px-sm py-xs rounded-full text-label-sm font-bold flex items-center gap-xs w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                    Disponible
+                                </span>
+</td>
+<td class="px-lg py-md">
+<div class="flex justify-center gap-md text-on-surface-variant">
+<button class="hover:text-primary transition-colors cursor-pointer material-symbols-outlined">edit</button>
+<button class="hover:text-error transition-colors cursor-pointer material-symbols-outlined">delete</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="table-row-hover">
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">grass</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Semillas de Quinua Orgánica</p>
+<p class="text-label-sm text-on-surface-variant">SKU-2024-042</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="bg-surface-container-highest text-on-surface-variant px-sm py-xs rounded text-label-sm">Granos</span>
+</td>
+<td class="px-lg py-md text-right font-label-md text-on-surface">$12.00</td>
+<td class="px-lg py-md text-right font-label-md text-on-surface">12</td>
+<td class="px-lg py-md">
+<span class="bg-error-container text-on-error-container px-sm py-xs rounded-full text-label-sm font-bold flex items-center gap-xs w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+                                    Bajo Stock
+                                </span>
+</td>
+<td class="px-lg py-md">
+<div class="flex justify-center gap-md text-on-surface-variant">
+<button class="hover:text-primary transition-colors cursor-pointer material-symbols-outlined">edit</button>
+<button class="hover:text-error transition-colors cursor-pointer material-symbols-outlined">delete</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="table-row-hover">
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">psychology_alt</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Polen de Abeja Premium</p>
+<p class="text-label-sm text-on-surface-variant">SKU-2024-118</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="bg-surface-container-highest text-on-surface-variant px-sm py-xs rounded text-label-sm">Suplementos</span>
+</td>
+<td class="px-lg py-md text-right font-label-md text-on-surface">$38.90</td>
+<td class="px-lg py-md text-right font-label-md text-on-surface">0</td>
+<td class="px-lg py-md">
+<span class="bg-tertiary-container text-on-tertiary-container px-sm py-xs rounded-full text-label-sm font-bold flex items-center gap-xs w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+                                    Agotado
+                                </span>
+</td>
+<td class="px-lg py-md">
+<div class="flex justify-center gap-md text-on-surface-variant">
+<button class="hover:text-primary transition-colors cursor-pointer material-symbols-outlined">edit</button>
+<button class="hover:text-error transition-colors cursor-pointer material-symbols-outlined">delete</button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="table-row-hover">
+<td class="px-lg py-md">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded bg-secondary-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">local_florist</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Té de Muña Ancestral</p>
+<p class="text-label-sm text-on-surface-variant">SKU-2024-009</p>
+</div>
+</div>
+</td>
+<td class="px-lg py-md">
+<span class="bg-surface-container-highest text-on-surface-variant px-sm py-xs rounded text-label-sm">Infusiones</span>
+</td>
+<td class="px-lg py-md text-right font-label-md text-on-surface">$15.75</td>
+<td class="px-lg py-md text-right font-label-md text-on-surface">420</td>
+<td class="px-lg py-md">
+<span class="bg-primary/10 text-primary px-sm py-xs rounded-full text-label-sm font-bold flex items-center gap-xs w-fit">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                    Disponible
+                                </span>
+</td>
+<td class="px-lg py-md">
+<div class="flex justify-center gap-md text-on-surface-variant">
+<button class="hover:text-primary transition-colors cursor-pointer material-symbols-outlined">edit</button>
+<button class="hover:text-error transition-colors cursor-pointer material-symbols-outlined">delete</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="flex justify-between items-center px-lg py-md bg-surface-container-low border-t border-outline-variant/50">
+<p class="text-label-sm text-on-surface-variant">Mostrando 1 a 4 de 1,284 productos</p>
+<div class="flex gap-xs">
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-container transition-colors material-symbols-outlined">chevron_left</button>
+<button class="w-8 h-8 flex items-center justify-center rounded bg-primary text-on-primary font-bold text-label-sm">1</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-container transition-colors text-label-sm">2</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-container transition-colors text-label-sm">3</button>
+<button class="w-8 h-8 flex items-center justify-center rounded border border-outline-variant hover:bg-surface-container transition-colors material-symbols-outlined">chevron_right</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        // Hover effects for the stats cards
+        document.querySelectorAll('.bg-surface-container-lowest.p-lg').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('translate-y-[-4px]', 'shadow-md');
+                card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('translate-y-[-4px]', 'shadow-md');
+            });
+        });
+
+        // Simple table delete confirmation logic
+        document.querySelectorAll('.material-symbols-outlined').forEach(icon => {
+            if (icon.innerText === 'delete') {
+                icon.addEventListener('click', (e) => {
+                    const row = e.target.closest('tr');
+                    const productName = row.querySelector('p.font-label-md').innerText;
+                    if(confirm(`¿Está seguro que desea eliminar "${productName}"?`)) {
+                        row.classList.add('opacity-50', 'bg-error-container/20');
+                        setTimeout(() => row.style.display = 'none', 300);
+                    }
+                });
+            }
+        });
+    </script>
+</body></html>
