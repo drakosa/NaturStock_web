@@ -1,7 +1,7 @@
 # NaturaStock Cusco
 
 Sistema de gestión e inventario para productos naturales.
-Desarrollado con HTML, CSS y JavaScript puro, con base de datos en Supabase.
+Desarrollado con HTML, CSS y JavaScript puro, con base de datos en Supabase (PostgreSQL).
 
 ## Tecnologías
 
@@ -14,11 +14,27 @@ Desarrollado con HTML, CSS y JavaScript puro, con base de datos en Supabase.
 ## Módulos
 
 1. **Inicio de Sesión** - Login local (admin / 123456)
-2. **Dashboard** - Estadísticas, gráficos, movimientos recientes
-3. **Productos** - CRUD completo con búsqueda y filtros
-4. **Inventario** - Entradas/Salidas con historial
-5. **Reportes** - Stock bajo, agotados, valor total, categorías
-6. **Perfil** - Información del usuario y cierre de sesión
+2. **Dashboard** - Estadísticas: total productos, clientes, proveedores, valor inventario, stock bajo, movimientos recientes, ventas del día
+3. **Productos** - CRUD completo con búsqueda, filtros por categoría y estado, SKU autogenerado
+4. **Categorías** - Gestión de categorías botánicas
+5. **Proveedores** - Gestión de proveedores con datos de contacto
+6. **Clientes** - Registro de clientes con tipo y número de documento
+7. **Ventas** - Registro de ventas con detalle, selección de cliente y productos, comprobante autogenerado
+8. **Inventario** - Entradas/Salidas con historial completo
+9. **Reportes** - Stock bajo, agotados, valor total, distribución por categorías
+10. **Perfil** - Información del usuario y cierre de sesión
+
+## Estructura de Base de Datos (9 tablas)
+
+- `usuarios` - Usuarios del sistema
+- `categorias` - Categorías de productos
+- `proveedores` - Proveedores
+- `productos` - Productos (con FK a categorías y proveedores)
+- `clientes` - Clientes (con tipo y número de documento)
+- `ventas` - Cabecera de ventas (FK a cliente y usuario)
+- `detalle_ventas` - Detalle de ventas (FK a venta y producto)
+- `movimientos_inventario` - Historial de entradas/salidas
+- `alertas_stock` - Alertas automáticas de stock bajo
 
 ## Instalación y Despliegue
 
@@ -34,7 +50,7 @@ Desarrollado con HTML, CSS y JavaScript puro, con base de datos en Supabase.
 2. Abre el archivo `supabase-schema.sql` de este proyecto
 3. Copia todo el contenido y pégalo en el editor
 4. Haz clic en **Run** para ejecutar el script
-5. Esto creará las tablas `productos` y `movimientos_inventario`, índices, triggers y datos de ejemplo
+5. Esto creará las 9 tablas, índices, triggers y datos de ejemplo
 
 ### 3. Configurar config.js
 

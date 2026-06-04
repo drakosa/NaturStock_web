@@ -1,10 +1,23 @@
-// ============================================
-// NaturaStock Cusco - Application Logic
-// ============================================
-
-// --- Supabase Client ---
 let supabase = null;
 let isOffline = false;
+
+let products = [];
+let categories = [];
+let suppliers = [];
+let clients = [];
+let sales = [];
+let saleDetails = [];
+let movements = [];
+let alerts = [];
+
+let currentPage = { products: 1, movements: 1, sales: 1 };
+const PAGE_SIZE = 10;
+let editingProductId = null;
+let editingCategoryId = null;
+let editingSupplierId = null;
+let editingClientId = null;
+let productFilterCategory = '';
+let productFilterStatus = '';
 
 function initSupabase() {
   try {
@@ -20,16 +33,6 @@ function initSupabase() {
   }
 }
 
-// --- State ---
-let products = [];
-let movements = [];
-let currentPage = { products: 1, movements: 1 };
-const PAGE_SIZE = 10;
-let editingProductId = null;
-let productFilterCategory = '';
-let productFilterStatus = '';
-
-// --- DOM Ready ---
 document.addEventListener('DOMContentLoaded', () => {
   initSupabase();
   setupLogin();
@@ -45,16 +48,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// ============================================
-// LOGIN
-// ============================================
 function setupLogin() {
   document.getElementById('loginForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const user = document.getElementById('loginUser').value.trim();
     const pass = document.getElementById('loginPass').value.trim();
     const errorEl = document.getElementById('loginError');
-
     if (user === 'admin' && pass === '123456') {
       errorEl.classList.remove('show');
       document.getElementById('loginScreen').style.display = 'none';
@@ -64,20 +63,12 @@ function setupLogin() {
       errorEl.classList.add('show');
     }
   });
-
   document.querySelectorAll('#loginForm input').forEach(inp => {
-    inp.addEventListener('focus', () => {
-      inp.parentElement.style.transform = 'scale(1.01)';
-    });
-    inp.addEventListener('blur', () => {
-      inp.parentElement.style.transform = '';
-    });
+    inp.addEventListener('focus', () => { inp.parentElement.style.transform = 'scale(1.01)'; });
+    inp.addEventListener('blur', () => { inp.parentElement.style.transform = ''; });
   });
 }
 
-// ============================================
-// SPA ROUTING
-// ============================================
 function setupRouting() {
   window.addEventListener('hashchange', handleRoute);
   if (!window.location.hash) {
@@ -95,6 +86,10 @@ function handleRoute() {
   const pageMap = {
     dashboard: 'pageDashboard',
     products: 'pageProducts',
+    categories: 'pageCategories',
+    suppliers: 'pageSuppliers',
+    clients: 'pageClients',
+    sales: 'pageSales',
     inventory: 'pageInventory',
     reports: 'pageReports',
     profile: 'pageProfile'
@@ -102,7 +97,6 @@ function handleRoute() {
 
   const page = document.getElementById(pageMap[hash]);
   const navLink = document.querySelector(`.sidebar-nav a[data-page="${hash}"]`);
-
   if (page) {
     page.classList.add('active');
     if (navLink) navLink.classList.add('active');
@@ -116,49 +110,106 @@ function loadPageData(page) {
   switch (page) {
     case 'dashboard': loadDashboard(); break;
     case 'products': renderProducts(); break;
+    case 'categories': renderCategories(); break;
+    case 'suppliers': renderSuppliers(); break;
+    case 'clients': renderClients(); break;
+    case 'sales': renderSales(); break;
     case 'inventory': renderMovements(); break;
     case 'reports': loadReports(); break;
   }
 }
 
-// ============================================
-// DATA LOADING
-// ============================================
 async function loadData() {
   if (isOffline) {
     loadExampleData();
     return;
   }
   try {
-    const [prodRes, movRes] = await Promise.all([
-      supabase.from('productos').select('*').order('created_at', { ascending: false }),
-      supabase.from('movimientos_inventario').select('*, productos(nombre)').order('fecha_movimiento', { ascending: false })
+    const [prodRes, movRes, catRes, supRes, cliRes, saleRes, detailRes, alertRes] = await Promise.all([
+      supabase.from('productos').select('*, categorias(nombre), proveedores(nombre)').order('created_at', { ascending: false }),
+      supabase.from('movimientos_inventario').select('*, productos(nombre)').order('fecha_movimiento', { ascending: false }),
+      supabase.from('categorias').select('*').order('nombre'),
+      supabase.from('proveedores').select('*').order('nombre'),
+      supabase.from('clientes').select('*').order('nombre'),
+      supabase.from('ventas').select('*, clientes(nombre)').order('created_at', { ascending: false }),
+      supabase.from('detalle_ventas').select('*, productos(nombre, precio)'),
+      supabase.from('alertas_stock').select('*, productos(nombre)').order('created_at', { ascending: false }).limit(20)
     ]);
-    if (prodRes.data) products = prodRes.data;
+    if (prodRes.data) products = prodRes.data.map(p => normalizeProduct(p));
     if (movRes.data) movements = movRes.data;
+    if (catRes.data) categories = catRes.data;
+    if (supRes.data) suppliers = supRes.data;
+    if (cliRes.data) clients = cliRes.data;
+    if (saleRes.data) sales = saleRes.data;
+    if (detailRes.data) saleDetails = detailRes.data;
+    if (alertRes.data) alerts = alertRes.data;
   } catch (e) {
     showToast('Error al conectar con Supabase. Usando datos de ejemplo.', 'error');
     loadExampleData();
     isOffline = true;
   }
   renderProducts();
+  renderCategories();
+  renderSuppliers();
+  renderClients();
+  renderSales();
   renderMovements();
   loadDashboard();
   loadReports();
 }
 
+function normalizeProduct(p) {
+  return {
+    ...p,
+    categoria: p.categorias?.nombre || '',
+    proveedor: p.proveedores?.nombre || '',
+    categoria_nombre: p.categorias?.nombre || '',
+    proveedor_nombre: p.proveedores?.nombre || ''
+  };
+}
+
 function loadExampleData() {
+  categories = [
+    { id: 1, nombre: 'Infusiones', descripcion: 'Tés e infusiones de hierbas andinas', created_at: new Date().toISOString() },
+    { id: 2, nombre: 'Suplementos', descripcion: 'Suplementos nutricionales naturales', created_at: new Date().toISOString() },
+    { id: 3, nombre: 'Hierbas', descripcion: 'Hierbas aromáticas y medicinales', created_at: new Date().toISOString() },
+    { id: 4, nombre: 'Mieles', descripcion: 'Miel de abeja y derivados', created_at: new Date().toISOString() },
+    { id: 5, nombre: 'Medicinales', descripcion: 'Plantas medicinales tradicionales', created_at: new Date().toISOString() },
+    { id: 6, nombre: 'Cosmética natural', descripcion: 'Cosméticos y cuidados naturales', created_at: new Date().toISOString() }
+  ];
+  suppliers = [
+    { id: 1, nombre: 'Hierbas del Valle SRL', contacto: 'Carlos Mamani', telefono: '+51 984 111 111', email: 'carlos@hierbasdelvalle.pe', direccion: 'Av. de la Cultura 123, Cusco' },
+    { id: 2, nombre: 'Andean Naturals EIRL', contacto: 'María Quispe', telefono: '+51 984 222 222', email: 'maria@andeannaturals.pe', direccion: 'Jr. Libertad 456, Urubamba' },
+    { id: 3, nombre: 'Mieles del Sur SAC', contacto: 'Pedro Huamán', telefono: '+51 984 333 333', email: 'pedro@mielesdelsur.pe', direccion: 'Calle Real 789, Cusco' },
+    { id: 4, nombre: 'Cosmética Nativa', contacto: 'Lucía Vargas', telefono: '+51 984 444 444', email: 'lucia@cosmeticanativa.pe', direccion: 'Av. Sol 321, Cusco' }
+  ];
+  clients = [
+    { id: 1, nombre: 'Juan Pérez García', tipo_documento: 'DNI', numero_documento: '12345678', telefono: '+51 987 654 321', email: 'juan@email.com', direccion: 'Av. Tullumayo 123, Cusco' },
+    { id: 2, nombre: 'María Torres Luna', tipo_documento: 'DNI', numero_documento: '23456789', telefono: '+51 987 654 322', email: 'maria@email.com', direccion: 'Jr. San Blas 456, Cusco' },
+    { id: 3, nombre: 'Comercial Andina SAC', tipo_documento: 'RUC', numero_documento: '20123456789', telefono: '+51 987 654 323', email: 'ventas@comercialandina.pe', direccion: 'Calle Suecia 789, Cusco' },
+    { id: 4, nombre: 'Botica Natural EIRL', tipo_documento: 'RUC', numero_documento: '20234567890', telefono: '+51 987 654 324', email: 'info@boticanatural.pe', direccion: 'Av. El Sol 321, Cusco' }
+  ];
   products = [
-    { id: 1, nombre: 'Miel de Abeja Pura 500ml', categoria: 'Mieles', precio: 25.00, stock: 120, stock_minimo: 10, descripcion: 'Miel de abeja 100% natural de los valles de Cusco.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 2, nombre: 'Muña Andina 100g', categoria: 'Hierbas', precio: 8.50, stock: 200, stock_minimo: 15, descripcion: 'Hierba aromática andina tradicional.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 3, nombre: 'Maca Negra en Polvo 250g', categoria: 'Suplementos', precio: 18.00, stock: 5, stock_minimo: 8, descripcion: 'Maca negra orgánica de Junín.', estado: 'bajo_stock', created_at: new Date().toISOString() },
-    { id: 4, nombre: 'Quinua Real Orgánica 1kg', categoria: 'Suplementos', precio: 12.00, stock: 0, stock_minimo: 10, descripcion: 'Quinua real orgánica del Altiplano.', estado: 'agotado', created_at: new Date().toISOString() },
-    { id: 5, nombre: 'Uña de Gato Corteza 150g', categoria: 'Medicinales', precio: 15.00, stock: 60, stock_minimo: 5, descripcion: 'Corteza de uña de gato amazónica.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 6, nombre: 'Té de Coca 25 bolsitas', categoria: 'Infusiones', precio: 6.50, stock: 300, stock_minimo: 20, descripcion: 'Té de hoja de coca tradicional.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 7, nombre: 'Pomada Natural de Arcilla 100g', categoria: 'Cosmética natural', precio: 22.00, stock: 30, stock_minimo: 5, descripcion: 'Pomada de arcilla con hierbas andinas.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 8, nombre: 'Aceite Esencial de Eucalipto 30ml', categoria: 'Medicinales', precio: 28.00, stock: 2, stock_minimo: 5, descripcion: 'Aceite esencial puro de eucalipto.', estado: 'bajo_stock', created_at: new Date().toISOString() },
-    { id: 9, nombre: 'Infusión de Manzanilla 20 sobres', categoria: 'Infusiones', precio: 5.00, stock: 250, stock_minimo: 15, descripcion: 'Manzanilla orgánica del Valle Sagrado.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 10, nombre: 'Crema de Mano de Caléndula 75ml', categoria: 'Cosmética natural', precio: 19.00, stock: 40, stock_minimo: 8, descripcion: 'Crema hidratante con caléndula y aceites naturales.', estado: 'disponible', created_at: new Date().toISOString() }
+    { id: 1, codigo: 'SKU-0001', nombre: 'Miel de Abeja Pura 500ml', categoria_id: 4, proveedor_id: 3, categoria: 'Mieles', proveedor: 'Mieles del Sur SAC', precio: 25.00, stock: 120, stock_minimo: 10, descripcion: 'Miel de abeja 100% natural de los valles de Cusco.', estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 2, codigo: 'SKU-0002', nombre: 'Muña Andina 100g', categoria_id: 3, proveedor_id: 1, categoria: 'Hierbas', proveedor: 'Hierbas del Valle SRL', precio: 8.50, stock: 200, stock_minimo: 15, descripcion: 'Hierba aromática andina tradicional.', estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 3, codigo: 'SKU-0003', nombre: 'Maca Negra en Polvo 250g', categoria_id: 2, proveedor_id: 2, categoria: 'Suplementos', proveedor: 'Andean Naturals EIRL', precio: 18.00, stock: 5, stock_minimo: 8, descripcion: 'Maca negra orgánica de Junín.', estado: 'bajo_stock', created_at: new Date().toISOString() },
+    { id: 4, codigo: 'SKU-0004', nombre: 'Quinua Real Orgánica 1kg', categoria_id: 2, proveedor_id: 2, categoria: 'Suplementos', proveedor: 'Andean Naturals EIRL', precio: 12.00, stock: 0, stock_minimo: 10, descripcion: 'Quinua real orgánica del Altiplano.', estado: 'agotado', created_at: new Date().toISOString() },
+    { id: 5, codigo: 'SKU-0005', nombre: 'Uña de Gato Corteza 150g', categoria_id: 5, proveedor_id: 1, categoria: 'Medicinales', proveedor: 'Hierbas del Valle SRL', precio: 15.00, stock: 60, stock_minimo: 5, descripcion: 'Corteza de uña de gato amazónica.', estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 6, codigo: 'SKU-0006', nombre: 'Té de Coca 25 bolsitas', categoria_id: 1, proveedor_id: 1, categoria: 'Infusiones', proveedor: 'Hierbas del Valle SRL', precio: 6.50, stock: 300, stock_minimo: 20, descripcion: 'Té de hoja de coca tradicional.', estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 7, codigo: 'SKU-0007', nombre: 'Pomada Natural de Arcilla 100g', categoria_id: 6, proveedor_id: 4, categoria: 'Cosmética natural', proveedor: 'Cosmética Nativa', precio: 22.00, stock: 30, stock_minimo: 5, descripcion: 'Pomada de arcilla con hierbas andinas.', estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 8, codigo: 'SKU-0008', nombre: 'Aceite Esencial de Eucalipto 30ml', categoria_id: 5, proveedor_id: 4, categoria: 'Medicinales', proveedor: 'Cosmética Nativa', precio: 28.00, stock: 2, stock_minimo: 5, descripcion: 'Aceite esencial puro de eucalipto.', estado: 'bajo_stock', created_at: new Date().toISOString() },
+    { id: 9, codigo: 'SKU-0009', nombre: 'Infusión de Manzanilla 20 sobres', categoria_id: 1, proveedor_id: 1, categoria: 'Infusiones', proveedor: 'Hierbas del Valle SRL', precio: 5.00, stock: 250, stock_minimo: 15, descripcion: 'Manzanilla orgánica del Valle Sagrado.', estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 10, codigo: 'SKU-0010', nombre: 'Crema de Mano de Caléndula 75ml', categoria_id: 6, proveedor_id: 4, categoria: 'Cosmética natural', proveedor: 'Cosmética Nativa', precio: 19.00, stock: 40, stock_minimo: 8, descripcion: 'Crema hidratante con caléndula y aceites naturales.', estado: 'disponible', created_at: new Date().toISOString() }
+  ];
+  sales = [
+    { id: 1, cliente_id: 1, total: 56.00, tipo_comprobante: 'Boleta', numero_comprobante: 'V20240601-0001', created_at: new Date(Date.now() - 3600000).toISOString(), clientes: { nombre: 'Juan Pérez García' } },
+    { id: 2, cliente_id: 3, total: 124.50, tipo_comprobante: 'Factura', numero_comprobante: 'V20240601-0002', created_at: new Date(Date.now() - 7200000).toISOString(), clientes: { nombre: 'Comercial Andina SAC' } }
+  ];
+  saleDetails = [
+    { id: 1, venta_id: 1, producto_id: 1, cantidad: 2, precio_unitario: 25.00, subtotal: 50.00, productos: { nombre: 'Miel de Abeja Pura 500ml' } },
+    { id: 2, venta_id: 1, producto_id: 2, cantidad: 4, precio_unitario: 8.50, subtotal: 6.00, productos: { nombre: 'Muña Andina 100g' } },
+    { id: 3, venta_id: 2, producto_id: 3, cantidad: 3, precio_unitario: 18.00, subtotal: 54.00, productos: { nombre: 'Maca Negra en Polvo 250g' } },
+    { id: 4, venta_id: 2, producto_id: 8, cantidad: 5, precio_unitario: 28.00, subtotal: 70.50, productos: { nombre: 'Aceite Esencial de Eucalipto 30ml' } }
   ];
   movements = [
     { id: 1, producto_id: 1, tipo_movimiento: 'entrada', cantidad: 50, descripcion: 'Reabastecimiento semanal', fecha_movimiento: new Date(Date.now() - 3600000).toISOString(), productos: { nombre: 'Miel de Abeja Pura 500ml' } },
@@ -167,37 +218,59 @@ function loadExampleData() {
     { id: 4, producto_id: 6, tipo_movimiento: 'salida', cantidad: 45, descripcion: 'Pedido distribuidor', fecha_movimiento: new Date(Date.now() - 14400000).toISOString(), productos: { nombre: 'Té de Coca 25 bolsitas' } },
     { id: 5, producto_id: 3, tipo_movimiento: 'entrada', cantidad: 20, descripcion: 'Reabastecimiento de maca', fecha_movimiento: new Date(Date.now() - 18000000).toISOString(), productos: { nombre: 'Maca Negra en Polvo 250g' } }
   ];
+  alerts = [
+    { id: 1, producto_id: 3, tipo_alerta: 'stock_bajo', mensaje: 'El producto "Maca Negra en Polvo 250g" tiene stock bajo: 5 unidades.', leida: false, created_at: new Date().toISOString(), productos: { nombre: 'Maca Negra en Polvo 250g' } },
+    { id: 2, producto_id: 8, tipo_alerta: 'stock_bajo', mensaje: 'El producto "Aceite Esencial de Eucalipto 30ml" tiene stock bajo: 2 unidades.', leida: false, created_at: new Date().toISOString(), productos: { nombre: 'Aceite Esencial de Eucalipto 30ml' } }
+  ];
   renderProducts();
+  renderCategories();
+  renderSuppliers();
+  renderClients();
+  renderSales();
   renderMovements();
   loadDashboard();
   loadReports();
 }
 
-// ============================================
-// DASHBOARD
-// ============================================
 function loadDashboard() {
   const total = products.length;
   const lowStock = products.filter(p => p.estado === 'bajo_stock').length;
   const outOfStock = products.filter(p => p.estado === 'agotado').length;
   const totalValue = products.reduce((sum, p) => sum + (p.precio * p.stock), 0);
   const totalMovements = movements.length;
-  const daySales = movements
-    .filter(m => m.tipo_movimiento === 'salida' && isToday(new Date(m.fecha_movimiento)))
-    .reduce((sum, m) => sum + (m.cantidad * getPrice(m.producto_id)), 0);
+  const totalClients = clients.length;
+  const totalSuppliers = suppliers.length;
+
+  const todaySales = sales.filter(s => isToday(new Date(s.created_at)));
+  const daySalesTotal = todaySales.reduce((sum, s) => sum + (parseFloat(s.total) || 0), 0);
 
   document.getElementById('dashTotalProducts').textContent = total;
   document.getElementById('dashLowStock').textContent = lowStock;
   document.getElementById('dashOutOfStock').textContent = outOfStock;
   document.getElementById('dashTotalValue').textContent = 'S/ ' + formatCurrency(totalValue);
   document.getElementById('dashTotalMovements').textContent = totalMovements;
-  document.getElementById('dashDaySales').textContent = 'S/ ' + formatCurrency(daySales);
+  document.getElementById('dashDaySales').textContent = 'S/ ' + formatCurrency(daySalesTotal);
 
   document.getElementById('dashProdTrend').textContent = total + ' total';
   document.getElementById('dashLowStockTrend').textContent = lowStock + ' críticos';
   document.getElementById('dashOutTrend').textContent = outOfStock + ' agotados';
   document.getElementById('dashValueTrend').textContent = 'S/ ' + formatCurrency(totalValue);
-  document.getElementById('dashSalesTrend').textContent = 'S/ ' + formatCurrency(daySales);
+  document.getElementById('dashSalesTrend').textContent = 'S/ ' + formatCurrency(daySalesTotal);
+
+  const statGrid = document.getElementById('dashboardStats');
+  const extraStats = statGrid.querySelectorAll('.stat-card-extra');
+  extraStats.forEach(el => el.remove());
+
+  const extras = [
+    { icon: 'people', label: 'Clientes', value: totalClients },
+    { icon: 'local_shipping', label: 'Proveedores', value: totalSuppliers }
+  ];
+  extras.forEach(ex => {
+    const div = document.createElement('div');
+    div.className = 'stat-card stat-card-extra';
+    div.innerHTML = '<div class="stat-card-header"><div class="stat-icon"><span class="material-icons">' + ex.icon + '</span></div></div><p class="stat-label">' + ex.label + '</p><p class="stat-value">' + ex.value + '</p>';
+    statGrid.appendChild(div);
+  });
 
   renderCategoryChart();
   renderDashMovements();
@@ -210,18 +283,12 @@ function isToday(date) {
     date.getFullYear() === now.getFullYear();
 }
 
-function getPrice(productId) {
-  const p = products.find(pr => pr.id === productId);
-  return p ? p.precio : 0;
-}
-
 function renderCategoryChart() {
   const container = document.getElementById('categoryChart');
   const cats = {};
   products.forEach(p => { cats[p.categoria] = (cats[p.categoria] || 0) + 1; });
   const entries = Object.entries(cats);
   const max = Math.max(...entries.map(([,v]) => v), 1);
-
   container.innerHTML = entries.map(([cat, count]) => {
     const height = (count / max) * 100;
     const catShort = cat.length > 12 ? cat.substring(0, 10) + '...' : cat;
@@ -249,9 +316,6 @@ function renderDashMovements() {
   }).join('');
 }
 
-// ============================================
-// PRODUCTS CRUD
-// ============================================
 function setupProductFilters() {
   document.getElementById('filterCategory').addEventListener('change', (e) => {
     productFilterCategory = e.target.value;
@@ -309,11 +373,11 @@ function renderProducts() {
   } else {
     tbody.innerHTML = pageItems.map(p => {
       const icons = ['eco', 'grass', 'spa', 'local_florist', 'psychology_alt', 'water_drop', 'science', 'filter_vintage', 'grain', 'park'];
-      const icon = icons[p.id % icons.length];
+      const icon = icons[(p.id || 0) % icons.length];
       const badgeClass = p.estado === 'disponible' ? 'badge-success' : p.estado === 'bajo_stock' ? 'badge-warning' : 'badge-danger';
       const badgeText = p.estado === 'disponible' ? 'Disponible' : p.estado === 'bajo_stock' ? 'Stock Bajo' : 'Agotado';
       return '<tr>' +
-        '<td><div class="table-product-cell"><div class="table-product-icon"><span class="material-icons">' + icon + '</span></div><div class="table-product-info"><p>' + p.nombre + '</p><p>SKU-' + String(p.id).padStart(4, '0') + '</p></div></div></td>' +
+        '<td><div class="table-product-cell"><div class="table-product-icon"><span class="material-icons">' + icon + '</span></div><div class="table-product-info"><p>' + p.nombre + '</p><p>' + (p.codigo || 'SKU-' + String(p.id).padStart(4, '0')) + '</p></div></div></td>' +
         '<td><span class="category-tag">' + p.categoria + '</span></td>' +
         '<td class="text-right" style="font-size:14px;font-weight:600;">S/ ' + formatCurrency(p.precio) + '</td>' +
         '<td class="text-right" style="font-size:14px;font-weight:600;">' + p.stock + '</td>' +
@@ -324,7 +388,6 @@ function renderProducts() {
         '</div></td></tr>';
     }).join('');
   }
-
   document.getElementById('productPaginationInfo').textContent =
     'Mostrando ' + (filtered.length === 0 ? 0 : start + 1) + ' a ' + Math.min(start + PAGE_SIZE, filtered.length) + ' de ' + filtered.length + ' productos';
   renderPagination('productPagination', currentPage.products, totalPages, 'products');
@@ -337,12 +400,16 @@ function openProductModal(productId) {
   const form = document.getElementById('productForm');
   form.reset();
 
+  const catSelect = document.getElementById('prodCategory');
+  catSelect.innerHTML = '<option value="">Seleccionar</option>' +
+    categories.map(c => '<option value="' + c.nombre + '">' + c.nombre + '</option>').join('');
+
   if (editingProductId) {
     const p = products.find(pr => pr.id === editingProductId);
     if (!p) return;
     title.textContent = 'Editar Producto';
     document.getElementById('prodName').value = p.nombre;
-    document.getElementById('prodCategory').value = p.categoria;
+    document.getElementById('prodCategory').value = p.categoria || '';
     document.getElementById('prodPrice').value = p.precio;
     document.getElementById('prodStock').value = p.stock;
     document.getElementById('prodMinStock').value = p.stock_minimo;
@@ -360,9 +427,11 @@ function closeModal(id) {
 function setupModals() {
   document.getElementById('productForm').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const catName = document.getElementById('prodCategory').value;
+    const cat = categories.find(c => c.nombre === catName);
     const data = {
       nombre: document.getElementById('prodName').value.trim(),
-      categoria: document.getElementById('prodCategory').value,
+      categoria_id: cat ? cat.id : null,
       precio: parseFloat(document.getElementById('prodPrice').value) || 0,
       stock: parseInt(document.getElementById('prodStock').value) || 0,
       stock_minimo: parseInt(document.getElementById('prodMinStock').value) || 5,
@@ -388,6 +457,61 @@ function setupModals() {
     closeModal('movementModal');
   });
 
+  document.getElementById('categoryForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+      nombre: document.getElementById('catName').value.trim(),
+      descripcion: document.getElementById('catDesc').value.trim()
+    };
+    if (editingCategoryId) {
+      await updateCategory(editingCategoryId, data);
+    } else {
+      await createCategory(data);
+    }
+    closeModal('categoryModal');
+  });
+
+  document.getElementById('supplierForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+      nombre: document.getElementById('supName').value.trim(),
+      contacto: document.getElementById('supContact').value.trim(),
+      telefono: document.getElementById('supPhone').value.trim(),
+      email: document.getElementById('supEmail').value.trim(),
+      direccion: document.getElementById('supAddress').value.trim()
+    };
+    if (editingSupplierId) {
+      await updateSupplier(editingSupplierId, data);
+    } else {
+      await createSupplier(data);
+    }
+    closeModal('supplierModal');
+  });
+
+  document.getElementById('clientForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = {
+      nombre: document.getElementById('cliName').value.trim(),
+      tipo_documento: document.getElementById('cliDocType').value,
+      numero_documento: document.getElementById('cliDocNum').value.trim(),
+      telefono: document.getElementById('cliPhone').value.trim(),
+      email: document.getElementById('cliEmail').value.trim(),
+      direccion: document.getElementById('cliAddress').value.trim()
+    };
+    if (editingClientId) {
+      await updateClient(editingClientId, data);
+    } else {
+      await createClient(data);
+    }
+    closeModal('clientModal');
+  });
+
+  document.getElementById('saleForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await createSale();
+    closeModal('saleModal');
+  });
+
   document.querySelectorAll('.modal-overlay').forEach(el => {
     el.addEventListener('click', (e) => {
       if (e.target === el) el.classList.remove('active');
@@ -398,9 +522,9 @@ function setupModals() {
 async function createProduct(data) {
   if (!isOffline) {
     try {
-      const { data: inserted, error } = await supabase.from('productos').insert(data).select();
+      const { data: inserted, error } = await supabase.from('productos').insert(data).select('*, categorias(nombre), proveedores(nombre)');
       if (error) throw error;
-      if (inserted) products.unshift(inserted[0]);
+      if (inserted) products.unshift(normalizeProduct(inserted[0]));
     } catch (e) {
       showToast('Error al guardar en Supabase. Guardando localmente.', 'error');
       addLocalProduct(data);
@@ -416,7 +540,16 @@ async function createProduct(data) {
 function addLocalProduct(data) {
   const newId = Math.max(...products.map(p => p.id), 0) + 1;
   const estado = data.stock === 0 ? 'agotado' : data.stock <= data.stock_minimo ? 'bajo_stock' : 'disponible';
-  products.unshift({ id: newId, ...data, estado, created_at: new Date().toISOString() });
+  const cat = categories.find(c => c.id === data.categoria_id);
+  products.unshift({
+    id: newId,
+    codigo: 'SKU-' + String(newId).padStart(4, '0'),
+    ...data,
+    categoria: cat ? cat.nombre : '',
+    proveedor: '',
+    estado,
+    created_at: new Date().toISOString()
+  });
 }
 
 async function updateProduct(id, data) {
@@ -430,7 +563,8 @@ async function updateProduct(id, data) {
   }
   const idx = products.findIndex(p => p.id === id);
   if (idx !== -1) {
-    products[idx] = { ...products[idx], ...data };
+    const cat = categories.find(c => c.id === data.categoria_id);
+    products[idx] = { ...products[idx], ...data, categoria: cat ? cat.nombre : products[idx].categoria };
     products[idx].estado = data.stock === 0 ? 'agotado' : data.stock <= data.stock_minimo ? 'bajo_stock' : 'disponible';
   }
   showToast('Producto actualizado correctamente', 'success');
@@ -441,14 +575,11 @@ async function updateProduct(id, data) {
 async function deleteProduct(id) {
   const p = products.find(pr => pr.id === id);
   if (!confirm('¿Está seguro que desea eliminar "' + (p?.nombre || '') + '"?')) return;
-
   if (!isOffline) {
     try {
       await supabase.from('movimientos_inventario').delete().eq('producto_id', id);
       await supabase.from('productos').delete().eq('id', id);
-    } catch (e) {
-      showToast('Error al eliminar en Supabase.', 'error');
-    }
+    } catch (e) { showToast('Error al eliminar en Supabase.', 'error'); }
   }
   products = products.filter(pr => pr.id !== id);
   movements = movements.filter(m => m.producto_id !== id);
@@ -458,13 +589,476 @@ async function deleteProduct(id) {
   renderMovements();
 }
 
-function editProduct(id) {
-  openProductModal(id);
+function editProduct(id) { openProductModal(id); }
+
+function renderCategories() {
+  document.getElementById('catTotal').textContent = categories.length;
+  document.getElementById('catProducts').textContent = products.filter(p => p.categoria_id).length;
+
+  const tbody = document.getElementById('categoriesTableBody');
+  if (categories.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--on-surface-variant);">No hay categorías registradas</td></tr>';
+    return;
+  }
+  tbody.innerHTML = categories.map(c => {
+    const count = products.filter(p => p.categoria === c.nombre || p.categoria_id === c.id).length;
+    return '<tr>' +
+      '<td style="font-size:14px;font-weight:600;">' + c.nombre + '</td>' +
+      '<td style="font-size:14px;">' + (c.descripcion || '-') + '</td>' +
+      '<td style="font-size:14px;font-weight:600;">' + count + '</td>' +
+      '<td class="text-center"><div class="table-actions">' +
+        '<button class="btn-edit" onclick="editCategory(' + c.id + ')" title="Editar"><span class="material-icons">edit</span></button>' +
+        '<button class="btn-delete" onclick="deleteCategory(' + c.id + ')" title="Eliminar"><span class="material-icons">delete</span></button>' +
+      '</div></td></tr>';
+  }).join('');
 }
 
-// ============================================
-// INVENTORY / MOVEMENTS
-// ============================================
+function openCategoryModal(id) {
+  editingCategoryId = id || null;
+  const modal = document.getElementById('categoryModal');
+  document.getElementById('categoryForm').reset();
+  if (editingCategoryId) {
+    const c = categories.find(cat => cat.id === editingCategoryId);
+    if (!c) return;
+    document.getElementById('categoryModalTitle').textContent = 'Editar Categoría';
+    document.getElementById('catName').value = c.nombre;
+    document.getElementById('catDesc').value = c.descripcion || '';
+  } else {
+    document.getElementById('categoryModalTitle').textContent = 'Registrar Categoría';
+  }
+  modal.classList.add('active');
+}
+
+function editCategory(id) { openCategoryModal(id); }
+
+async function createCategory(data) {
+  if (!isOffline) {
+    try {
+      const { data: inserted, error } = await supabase.from('categorias').insert(data).select();
+      if (error) throw error;
+      if (inserted) categories.push(inserted[0]);
+    } catch (e) { showToast('Error al guardar en Supabase.', 'error'); addLocalCategory(data); }
+  } else { addLocalCategory(data); }
+  showToast('Categoría registrada correctamente', 'success');
+  renderCategories();
+  loadDashboard();
+}
+
+function addLocalCategory(data) {
+  const newId = Math.max(...categories.map(c => c.id), 0) + 1;
+  categories.push({ id: newId, ...data, created_at: new Date().toISOString() });
+}
+
+async function updateCategory(id, data) {
+  if (!isOffline) {
+    try {
+      await supabase.from('categorias').update(data).eq('id', id);
+    } catch (e) { showToast('Error al actualizar en Supabase.', 'error'); }
+  }
+  const idx = categories.findIndex(c => c.id === id);
+  if (idx !== -1) categories[idx] = { ...categories[idx], ...data };
+  showToast('Categoría actualizada correctamente', 'success');
+  renderCategories();
+}
+
+async function deleteCategory(id) {
+  if (!confirm('¿Está seguro de eliminar esta categoría?')) return;
+  if (!isOffline) {
+    try { await supabase.from('categorias').delete().eq('id', id); } catch (e) { showToast('Error al eliminar.', 'error'); }
+  }
+  categories = categories.filter(c => c.id !== id);
+  showToast('Categoría eliminada correctamente', 'success');
+  renderCategories();
+  loadDashboard();
+}
+
+function renderSuppliers() {
+  document.getElementById('supTotal').textContent = suppliers.length;
+  document.getElementById('supProducts').textContent = products.filter(p => p.proveedor_id).length;
+
+  const tbody = document.getElementById('suppliersTableBody');
+  if (suppliers.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--on-surface-variant);">No hay proveedores registrados</td></tr>';
+    return;
+  }
+  tbody.innerHTML = suppliers.map(s =>
+    '<tr><td style="font-size:14px;font-weight:600;">' + s.nombre + '</td>' +
+    '<td style="font-size:14px;">' + (s.contacto || '-') + '</td>' +
+    '<td style="font-size:14px;">' + (s.telefono || '-') + '</td>' +
+    '<td style="font-size:14px;">' + (s.email || '-') + '</td>' +
+    '<td style="font-size:14px;">' + (s.direccion || '-') + '</td>' +
+    '<td class="text-center"><div class="table-actions">' +
+      '<button class="btn-edit" onclick="editSupplier(' + s.id + ')" title="Editar"><span class="material-icons">edit</span></button>' +
+      '<button class="btn-delete" onclick="deleteSupplier(' + s.id + ')" title="Eliminar"><span class="material-icons">delete</span></button>' +
+    '</div></td></tr>'
+  ).join('');
+}
+
+function openSupplierModal(id) {
+  editingSupplierId = id || null;
+  const modal = document.getElementById('supplierModal');
+  document.getElementById('supplierForm').reset();
+  if (editingSupplierId) {
+    const s = suppliers.find(sup => sup.id === editingSupplierId);
+    if (!s) return;
+    document.getElementById('supplierModalTitle').textContent = 'Editar Proveedor';
+    document.getElementById('supName').value = s.nombre;
+    document.getElementById('supContact').value = s.contacto || '';
+    document.getElementById('supPhone').value = s.telefono || '';
+    document.getElementById('supEmail').value = s.email || '';
+    document.getElementById('supAddress').value = s.direccion || '';
+  } else {
+    document.getElementById('supplierModalTitle').textContent = 'Registrar Proveedor';
+  }
+  modal.classList.add('active');
+}
+
+function editSupplier(id) { openSupplierModal(id); }
+
+async function createSupplier(data) {
+  if (!isOffline) {
+    try {
+      const { data: inserted, error } = await supabase.from('proveedores').insert(data).select();
+      if (error) throw error;
+      if (inserted) suppliers.push(inserted[0]);
+    } catch (e) { showToast('Error al guardar en Supabase.', 'error'); addLocalSupplier(data); }
+  } else { addLocalSupplier(data); }
+  showToast('Proveedor registrado correctamente', 'success');
+  renderSuppliers();
+  loadDashboard();
+}
+
+function addLocalSupplier(data) {
+  const newId = Math.max(...suppliers.map(s => s.id), 0) + 1;
+  suppliers.push({ id: newId, ...data, created_at: new Date().toISOString() });
+}
+
+async function updateSupplier(id, data) {
+  if (!isOffline) {
+    try { await supabase.from('proveedores').update(data).eq('id', id); } catch (e) { showToast('Error al actualizar.', 'error'); }
+  }
+  const idx = suppliers.findIndex(s => s.id === id);
+  if (idx !== -1) suppliers[idx] = { ...suppliers[idx], ...data };
+  showToast('Proveedor actualizado correctamente', 'success');
+  renderSuppliers();
+}
+
+async function deleteSupplier(id) {
+  if (!confirm('¿Está seguro de eliminar este proveedor?')) return;
+  if (!isOffline) {
+    try { await supabase.from('proveedores').delete().eq('id', id); } catch (e) { showToast('Error al eliminar.', 'error'); }
+  }
+  suppliers = suppliers.filter(s => s.id !== id);
+  showToast('Proveedor eliminado correctamente', 'success');
+  renderSuppliers();
+  loadDashboard();
+}
+
+function renderClients() {
+  document.getElementById('cliTotal').textContent = clients.length;
+  document.getElementById('cliSales').textContent = sales.filter(s => s.cliente_id).length;
+
+  const tbody = document.getElementById('clientsTableBody');
+  if (clients.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--on-surface-variant);">No hay clientes registrados</td></tr>';
+    return;
+  }
+  tbody.innerHTML = clients.map(c =>
+    '<tr><td style="font-size:14px;font-weight:600;">' + c.nombre + '</td>' +
+    '<td style="font-size:14px;">' + (c.tipo_documento || 'DNI') + ': ' + (c.numero_documento || '-') + '</td>' +
+    '<td style="font-size:14px;">' + (c.telefono || '-') + '</td>' +
+    '<td style="font-size:14px;">' + (c.email || '-') + '</td>' +
+    '<td style="font-size:14px;">' + (c.direccion || '-') + '</td>' +
+    '<td class="text-center"><div class="table-actions">' +
+      '<button class="btn-edit" onclick="editClient(' + c.id + ')" title="Editar"><span class="material-icons">edit</span></button>' +
+      '<button class="btn-delete" onclick="deleteClient(' + c.id + ')" title="Eliminar"><span class="material-icons">delete</span></button>' +
+    '</div></td></tr>'
+  ).join('');
+}
+
+function openClientModal(id) {
+  editingClientId = id || null;
+  const modal = document.getElementById('clientModal');
+  document.getElementById('clientForm').reset();
+  if (editingClientId) {
+    const c = clients.find(cli => cli.id === editingClientId);
+    if (!c) return;
+    document.getElementById('clientModalTitle').textContent = 'Editar Cliente';
+    document.getElementById('cliName').value = c.nombre;
+    document.getElementById('cliDocType').value = c.tipo_documento || 'DNI';
+    document.getElementById('cliDocNum').value = c.numero_documento || '';
+    document.getElementById('cliPhone').value = c.telefono || '';
+    document.getElementById('cliEmail').value = c.email || '';
+    document.getElementById('cliAddress').value = c.direccion || '';
+  } else {
+    document.getElementById('clientModalTitle').textContent = 'Registrar Cliente';
+  }
+  modal.classList.add('active');
+}
+
+function editClient(id) { openClientModal(id); }
+
+async function createClient(data) {
+  if (!isOffline) {
+    try {
+      const { data: inserted, error } = await supabase.from('clientes').insert(data).select();
+      if (error) throw error;
+      if (inserted) clients.push(inserted[0]);
+    } catch (e) { showToast('Error al guardar en Supabase.', 'error'); addLocalClient(data); }
+  } else { addLocalClient(data); }
+  showToast('Cliente registrado correctamente', 'success');
+  renderClients();
+  loadDashboard();
+}
+
+function addLocalClient(data) {
+  const newId = Math.max(...clients.map(c => c.id), 0) + 1;
+  clients.push({ id: newId, ...data, created_at: new Date().toISOString() });
+}
+
+async function updateClient(id, data) {
+  if (!isOffline) {
+    try { await supabase.from('clientes').update(data).eq('id', id); } catch (e) { showToast('Error al actualizar.', 'error'); }
+  }
+  const idx = clients.findIndex(c => c.id === id);
+  if (idx !== -1) clients[idx] = { ...clients[idx], ...data };
+  showToast('Cliente actualizado correctamente', 'success');
+  renderClients();
+}
+
+async function deleteClient(id) {
+  if (!confirm('¿Está seguro de eliminar este cliente?')) return;
+  if (!isOffline) {
+    try { await supabase.from('clientes').delete().eq('id', id); } catch (e) { showToast('Error al eliminar.', 'error'); }
+  }
+  clients = clients.filter(c => c.id !== id);
+  showToast('Cliente eliminado correctamente', 'success');
+  renderClients();
+  loadDashboard();
+}
+
+function renderSales() {
+  const totalSalesToday = sales.filter(s => isToday(new Date(s.created_at))).length;
+  const todayRevenue = sales.filter(s => isToday(new Date(s.created_at))).reduce((sum, s) => sum + (parseFloat(s.total) || 0), 0);
+  const totalSales = sales.length;
+  const totalRevenue = sales.reduce((sum, s) => sum + (parseFloat(s.total) || 0), 0);
+  const totalPages = Math.ceil(totalSales / PAGE_SIZE) || 1;
+  currentPage.sales = Math.min(currentPage.sales, totalPages);
+  const start = (currentPage.sales - 1) * PAGE_SIZE;
+  const pageItems = sales.slice(start, start + PAGE_SIZE);
+
+  document.getElementById('saleToday').textContent = totalSalesToday;
+  document.getElementById('saleRevenue').textContent = 'S/ ' + formatCurrency(todayRevenue);
+  document.getElementById('saleTotal').textContent = totalSales;
+  document.getElementById('saleTotalRevenue').textContent = 'S/ ' + formatCurrency(totalRevenue);
+  document.getElementById('saleCount').textContent = 'Mostrando todas las ventas (' + totalSales + ')';
+
+  const tbody = document.getElementById('salesTableBody');
+  if (pageItems.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--on-surface-variant);">No hay ventas registradas</td></tr>';
+  } else {
+    tbody.innerHTML = pageItems.map(s => {
+      const clienteNombre = s.clientes?.nombre || clients.find(c => c.id === s.cliente_id)?.nombre || 'Sin cliente';
+      return '<tr>' +
+        '<td style="font-size:14px;font-weight:600;">' + (s.numero_comprobante || 'N/A') + '</td>' +
+        '<td style="font-size:14px;">' + clienteNombre + '</td>' +
+        '<td class="text-right" style="font-size:14px;font-weight:600;">S/ ' + formatCurrency(parseFloat(s.total) || 0) + '</td>' +
+        '<td><span class="category-tag">' + s.tipo_comprobante + '</span></td>' +
+        '<td style="font-size:14px;">' + formatDate(s.created_at) + '</td>' +
+        '<td class="text-center"><div class="table-actions">' +
+          '<button class="btn-edit" onclick="viewSaleDetail(' + s.id + ')" title="Ver detalle"><span class="material-icons">receipt</span></button>' +
+          '<button class="btn-delete" onclick="deleteSale(' + s.id + ')" title="Eliminar"><span class="material-icons">delete</span></button>' +
+        '</div></td></tr>';
+    }).join('');
+  }
+  document.getElementById('salePaginationInfo').textContent =
+    'Mostrando ' + (totalSales === 0 ? 0 : start + 1) + ' a ' + Math.min(start + PAGE_SIZE, totalSales) + ' de ' + totalSales + ' ventas';
+  renderPagination('salePagination', currentPage.sales, totalPages, 'sales');
+}
+
+function viewSaleDetail(saleId) {
+  const modal = document.getElementById('saleDetailModal');
+  const sale = sales.find(s => s.id === saleId);
+  if (!sale) return;
+  const clienteNombre = sale.clientes?.nombre || clients.find(c => c.id === sale.cliente_id)?.nombre || 'Sin cliente';
+  document.getElementById('saleDetailInfo').innerHTML =
+    '<div><strong>Comprobante:</strong> ' + (sale.numero_comprobante || 'N/A') + '</div>' +
+    '<div><strong>Cliente:</strong> ' + clienteNombre + '</div>' +
+    '<div><strong>Fecha:</strong> ' + formatDate(sale.created_at) + '</div>' +
+    '<div><strong>Total:</strong> S/ ' + formatCurrency(parseFloat(sale.total) || 0) + '</div>';
+  const details = saleDetails.filter(d => d.venta_id === saleId);
+  const tbody = document.getElementById('saleDetailBody');
+  if (details.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:16px;color:var(--on-surface-variant);">Sin detalle</td></tr>';
+  } else {
+    tbody.innerHTML = details.map(d => {
+      const prodName = d.productos?.nombre || products.find(p => p.id === d.producto_id)?.nombre || 'Producto';
+      return '<tr><td>' + prodName + '</td><td class="text-right">' + d.cantidad + '</td><td class="text-right">S/ ' + formatCurrency(parseFloat(d.precio_unitario) || 0) + '</td><td class="text-right">S/ ' + formatCurrency(parseFloat(d.subtotal) || 0) + '</td></tr>';
+    }).join('');
+    tbody.innerHTML += '<tr style="font-weight:700;border-top:2px solid var(--primary);"><td colspan="3" class="text-right">Total</td><td class="text-right">S/ ' + formatCurrency(parseFloat(sale.total) || 0) + '</td></tr>';
+  }
+  modal.classList.add('active');
+}
+
+async function deleteSale(id) {
+  if (!confirm('¿Está seguro de eliminar esta venta? Se eliminarán también los detalles.')) return;
+  if (!isOffline) {
+    try {
+      await supabase.from('detalle_ventas').delete().eq('venta_id', id);
+      await supabase.from('ventas').delete().eq('id', id);
+    } catch (e) { showToast('Error al eliminar en Supabase.', 'error'); }
+  }
+  saleDetails = saleDetails.filter(d => d.venta_id !== id);
+  sales = sales.filter(s => s.id !== id);
+  showToast('Venta eliminada correctamente', 'success');
+  renderSales();
+  loadDashboard();
+}
+
+function openSaleModal() {
+  if (clients.length === 0) {
+    showToast('Registre un cliente primero.', 'info');
+    return;
+  }
+  if (products.length === 0) {
+    showToast('Registre un producto primero.', 'info');
+    return;
+  }
+  const modal = document.getElementById('saleModal');
+  document.getElementById('saleForm').reset();
+
+  const clientSelect = document.getElementById('saleClient');
+  clientSelect.innerHTML = '<option value="">Seleccionar cliente</option>' +
+    clients.map(c => '<option value="' + c.id + '">' + c.nombre + (c.numero_documento ? ' (' + c.numero_documento + ')' : '') + '</option>').join('');
+
+  const container = document.getElementById('saleDetailsContainer');
+  container.innerHTML = getSaleDetailRowHtml(0);
+  updateSaleTotal();
+  modal.classList.add('active');
+}
+
+let saleDetailRowCount = 0;
+
+function getSaleDetailRowHtml(index) {
+  return '<div class="sale-detail-row" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end;">' +
+    '<div class="form-group"><label>Producto</label><select class="sale-product" onchange="onSaleProductChange(this)" required>' +
+      '<option value="">Seleccionar</option>' +
+      products.map(p => '<option value="' + p.id + '" data-precio="' + p.precio + '">' + p.nombre + ' (Stock: ' + p.stock + ')</option>').join('') +
+    '</select></div>' +
+    '<div class="form-group"><label>Cant.</label><input type="number" class="sale-qty" value="1" min="1" onchange="updateSaleTotal()" required></div>' +
+    '<div class="form-group"><label>P. Unit.</label><input type="text" class="sale-price" readonly style="background:var(--surface-container-low);"></div>' +
+    '<div class="form-group"><label>Subtotal</label><input type="text" class="sale-subtotal" readonly style="background:var(--surface-container-low);"></div>' +
+    '<button type="button" class="btn btn-icon" onclick="removeSaleDetailRow(this)" style="margin-bottom:4px;color:var(--error);"><span class="material-icons">remove_circle</span></button>' +
+  '</div>';
+}
+
+function addSaleDetailRow() {
+  const container = document.getElementById('saleDetailsContainer');
+  container.insertAdjacentHTML('beforeend', getSaleDetailRowHtml());
+}
+
+function removeSaleDetailRow(btn) {
+  const container = document.getElementById('saleDetailsContainer');
+  if (container.children.length <= 1) {
+    showToast('Debe tener al menos un producto.', 'info');
+    return;
+  }
+  btn.closest('.sale-detail-row').remove();
+  updateSaleTotal();
+}
+
+function onSaleProductChange(select) {
+  const option = select.options[select.selectedIndex];
+  const precio = option ? parseFloat(option.dataset.precio) || 0 : 0;
+  const row = select.closest('.sale-detail-row');
+  row.querySelector('.sale-price').value = 'S/ ' + formatCurrency(precio);
+  updateSaleTotal();
+}
+
+function updateSaleTotal() {
+  let total = 0;
+  document.querySelectorAll('.sale-detail-row').forEach(row => {
+    const select = row.querySelector('.sale-product');
+    const qty = parseInt(row.querySelector('.sale-qty').value) || 0;
+    const option = select.options[select.selectedIndex];
+    const precio = option ? parseFloat(option.dataset.precio) || 0 : 0;
+    const subtotal = qty * precio;
+    row.querySelector('.sale-price').value = 'S/ ' + formatCurrency(precio);
+    row.querySelector('.sale-subtotal').value = 'S/ ' + formatCurrency(subtotal);
+    total += subtotal;
+  });
+  document.getElementById('saleTotalDisplay').textContent = 'S/ ' + formatCurrency(total);
+}
+
+async function createSale() {
+  const cliente_id = parseInt(document.getElementById('saleClient').value);
+  if (!cliente_id) { showToast('Seleccione un cliente.', 'error'); return; }
+  const tipo_comprobante = document.getElementById('saleDocType').value;
+
+  const rows = [];
+  document.querySelectorAll('.sale-detail-row').forEach(row => {
+    const producto_id = parseInt(row.querySelector('.sale-product').value);
+    const cantidad = parseInt(row.querySelector('.sale-qty').value) || 0;
+    const option = row.querySelector('.sale-product').options[row.querySelector('.sale-product').selectedIndex];
+    const precio = option ? parseFloat(option.dataset.precio) || 0 : 0;
+    if (producto_id && cantidad > 0) {
+      rows.push({ producto_id, cantidad, precio_unitario: precio, subtotal: cantidad * precio });
+    }
+  });
+  if (rows.length === 0) { showToast('Agregue al menos un producto.', 'error'); return; }
+  const total = rows.reduce((s, r) => s + r.subtotal, 0);
+
+  if (!isOffline) {
+    try {
+      const { data: venta, error: ventaError } = await supabase.from('ventas').insert({
+        cliente_id, tipo_comprobante, total
+      }).select();
+      if (ventaError) throw ventaError;
+      if (venta && venta[0]) {
+        const detalles = rows.map(r => ({ ...r, venta_id: venta[0].id }));
+        const { error: detError } = await supabase.from('detalle_ventas').insert(detalles);
+        if (detError) throw detError;
+        for (const r of rows) {
+          await supabase.from('movimientos_inventario').insert({
+            producto_id: r.producto_id, tipo_movimiento: 'salida',
+            cantidad: r.cantidad, descripcion: 'Venta #' + venta[0].numero_comprobante
+          });
+        }
+        const { data: fullVenta } = await supabase.from('ventas').select('*, clientes(nombre)').eq('id', venta[0].id).single();
+        if (fullVenta) sales.unshift(fullVenta);
+        const detailInserts = detalles.map(d => ({ ...d, productos: products.find(p => p.id === d.producto_id) ? { nombre: products.find(p => p.id === d.producto_id).nombre } : {} }));
+        saleDetails.unshift(...detailInserts);
+      }
+    } catch (e) { showToast('Error al registrar venta en Supabase.', 'error'); addLocalSale(cliente_id, tipo_comprobante, total, rows); }
+  } else { addLocalSale(cliente_id, tipo_comprobante, total, rows); }
+  showToast('Venta registrada correctamente', 'success');
+  renderSales();
+  loadDashboard();
+  renderProducts();
+}
+
+function addLocalSale(cliente_id, tipo_comprobante, total, rows) {
+  const newId = Math.max(...sales.map(s => s.id), 0) + 1;
+  const cli = clients.find(c => c.id === cliente_id);
+  const now = new Date().toISOString();
+  const comprobante = 'V' + now.substring(0, 10).replace(/-/g, '') + '-' + String(newId).padStart(4, '0');
+  sales.unshift({
+    id: newId, cliente_id, total, tipo_comprobante, numero_comprobante: comprobante, created_at: now,
+    clientes: cli ? { nombre: cli.nombre } : { nombre: 'Sin cliente' }
+  });
+  rows.forEach((r, i) => {
+    const prod = products.find(p => p.id === r.producto_id);
+    saleDetails.unshift({
+      id: Date.now() + i, venta_id: newId, ...r,
+      productos: prod ? { nombre: prod.nombre } : { nombre: 'Producto' }
+    });
+    if (prod) {
+      prod.stock = Math.max(prod.stock - r.cantidad, 0);
+      prod.estado = prod.stock === 0 ? 'agotado' : prod.stock <= prod.stock_minimo ? 'bajo_stock' : 'disponible';
+    }
+  });
+}
+
 function renderMovements() {
   const totalPages = Math.ceil(movements.length / PAGE_SIZE) || 1;
   currentPage.movements = Math.min(currentPage.movements, totalPages);
@@ -482,7 +1076,6 @@ function renderMovements() {
     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--on-surface-variant);">No hay movimientos registrados</td></tr>';
     return;
   }
-
   tbody.innerHTML = pageItems.map(m => {
     const prodName = m.productos?.nombre || products.find(p => p.id === m.producto_id)?.nombre || 'Producto';
     const isEntry = m.tipo_movimiento === 'entrada';
@@ -494,7 +1087,6 @@ function renderMovements() {
       '<td style="font-size:14px;">' + (m.descripcion || '-') + '</td>' +
       '</tr>';
   }).join('');
-
   document.getElementById('movementCount').textContent = 'Mostrando todos los movimientos (' + movements.length + ')';
   document.getElementById('movementPaginationInfo').textContent =
     'Mostrando ' + (movements.length === 0 ? 0 : start + 1) + ' a ' + Math.min(start + PAGE_SIZE, movements.length) + ' de ' + movements.length + ' movimientos';
@@ -514,23 +1106,14 @@ async function openMovementModal() {
 }
 
 async function createMovement(data) {
-  if (data.cantidad <= 0) {
-    showToast('La cantidad debe ser mayor a 0', 'error');
-    return;
-  }
-
+  if (data.cantidad <= 0) { showToast('La cantidad debe ser mayor a 0', 'error'); return; }
   if (!isOffline) {
     try {
       const { data: inserted, error } = await supabase.from('movimientos_inventario').insert(data).select();
       if (error) throw error;
       if (inserted) movements.unshift(inserted[0]);
-    } catch (e) {
-      showToast('Error al registrar en Supabase.', 'error');
-      addLocalMovement(data);
-    }
-  } else {
-    addLocalMovement(data);
-  }
+    } catch (e) { showToast('Error al registrar en Supabase.', 'error'); addLocalMovement(data); }
+  } else { addLocalMovement(data); }
   showToast('Movimiento registrado correctamente', 'success');
   renderMovements();
   loadDashboard();
@@ -552,9 +1135,6 @@ function addLocalMovement(data) {
   prod.estado = prod.stock === 0 ? 'agotado' : prod.stock <= prod.stock_minimo ? 'bajo_stock' : 'disponible';
 }
 
-// ============================================
-// REPORTS
-// ============================================
 function loadReports() {
   const total = products.length;
   const lowStock = products.filter(p => p.estado === 'bajo_stock').length;
@@ -583,7 +1163,6 @@ function loadReports() {
   products.forEach(p => { cats[p.categoria] = (cats[p.categoria] || 0) + 1; });
   const entries = Object.entries(cats);
   const max = Math.max(...entries.map(([,v]) => v), 1);
-
   container.innerHTML = entries.map(([cat, count]) => {
     const pct = (count / max) * 100;
     return '<div class="cat-bar">' +
@@ -593,9 +1172,6 @@ function loadReports() {
   }).join('') || '<p style="color:var(--on-surface-variant);padding:16px;">Sin productos</p>';
 }
 
-// ============================================
-// LOGOUT
-// ============================================
 function setupLogout() {
   document.getElementById('logoutBtn').addEventListener('click', (e) => {
     e.preventDefault();
@@ -604,9 +1180,7 @@ function setupLogout() {
 }
 
 function setupProfileLogout() {
-  document.getElementById('profileLogoutBtn').addEventListener('click', () => {
-    logout();
-  });
+  document.getElementById('profileLogoutBtn').addEventListener('click', () => { logout(); });
 }
 
 function logout() {
@@ -616,9 +1190,6 @@ function logout() {
   window.location.hash = '';
 }
 
-// ============================================
-// SIDEBAR TOGGLE (Mobile)
-// ============================================
 document.getElementById('menuToggle').addEventListener('click', () => {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('sidebarOverlay').classList.toggle('active');
@@ -631,9 +1202,6 @@ function closeSidebar() {
 
 document.getElementById('sidebarOverlay').addEventListener('click', closeSidebar);
 
-// ============================================
-// HELPERS
-// ============================================
 function formatCurrency(value) {
   return value.toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
@@ -645,14 +1213,9 @@ function formatDate(dateStr) {
 
 function renderPagination(containerId, current, total, type) {
   const container = document.getElementById(containerId);
-  if (!container || total <= 1) {
-    if (container) container.innerHTML = '';
-    return;
-  }
-
+  if (!container || total <= 1) { if (container) container.innerHTML = ''; return; }
   let html = '<button class="pagination-btn"' + (current <= 1 ? ' disabled' : '') + ' onclick="goToPage(\'' + type + '\', ' + (current - 1) + ')">' +
     '<span class="material-icons" style="font-size:20px;">chevron_left</span></button>';
-
   for (let i = 1; i <= total; i++) {
     if (i === 1 || i === total || (i >= current - 1 && i <= current + 1)) {
       html += '<button class="pagination-btn' + (i === current ? ' active' : '') + '" onclick="goToPage(\'' + type + '\', ' + i + ')">' + i + '</button>';
@@ -660,16 +1223,15 @@ function renderPagination(containerId, current, total, type) {
       html += '<button class="pagination-btn" disabled>...</button>';
     }
   }
-
   html += '<button class="pagination-btn"' + (current >= total ? ' disabled' : '') + ' onclick="goToPage(\'' + type + '\', ' + (current + 1) + ')">' +
     '<span class="material-icons" style="font-size:20px;">chevron_right</span></button>';
-
   container.innerHTML = html;
 }
 
 function goToPage(type, page) {
   currentPage[type] = page;
   if (type === 'products') renderProducts();
+  else if (type === 'sales') renderSales();
   else renderMovements();
 }
 
