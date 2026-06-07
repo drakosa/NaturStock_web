@@ -155,8 +155,6 @@ async function loadData() {
   } catch (e) {
     console.error('Error al conectar con Supabase:', e);
     showToast('Error al conectar con Supabase: ' + (e.message || 'desconocido'), 'error');
-    loadExampleData();
-    isOffline = true;
   }
   renderProducts();
   renderCategories();

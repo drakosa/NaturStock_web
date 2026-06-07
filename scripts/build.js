@@ -40,8 +40,8 @@ function main() {
   const configPath = path.join(DIST, 'config.js');
   if (fs.existsSync(templatePath)) {
     let template = fs.readFileSync(templatePath, 'utf8');
-    const supabaseUrl = process.env.SUPABASE_URL || 'https://tu-proyecto.supabase.co';
-    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'tu-anon-key-aqui';
+    const supabaseUrl = process.env.SUPABASE_URL || 'https://mwffklvdkalrcwuxizkg.supabase.co';
+    const supabaseAnonKey = process.env.SUPABASE_ANON_KEY || 'sb_publishable_oswhLhzhe6cAHNOmeIe3xQ_rz0bScru';
     template = template.replace(/__SUPABASE_URL__/g, supabaseUrl);
     template = template.replace(/__SUPABASE_ANON_KEY__/g, supabaseAnonKey);
     fs.writeFileSync(configPath, template);
