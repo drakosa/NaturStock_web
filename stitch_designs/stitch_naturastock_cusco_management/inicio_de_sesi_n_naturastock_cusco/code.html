@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Iniciar Sesión | NaturaStock Cusco</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#a1d494",
+                    "on-tertiary-fixed-variant": "#454744",
+                    "surface-container-lowest": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "primary-fixed": "#bcf0ae",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#c6c7c2",
+                    "secondary-fixed": "#ccebc7",
+                    "inverse-surface": "#213145",
+                    "on-surface": "#0b1c30",
+                    "surface": "#f8f9ff",
+                    "on-primary-fixed": "#002201",
+                    "on-primary-container": "#9dd090",
+                    "tertiary-container": "#4f514d",
+                    "on-tertiary-container": "#c3c3bf",
+                    "on-error-container": "#93000a",
+                    "surface-dim": "#cbdbf5",
+                    "tertiary-fixed": "#e3e3de",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "primary": "#154212",
+                    "outline": "#72796e",
+                    "on-tertiary-fixed": "#1a1c19",
+                    "inverse-on-surface": "#eaf1ff",
+                    "primary-container": "#2d5a27",
+                    "on-secondary": "#ffffff",
+                    "tertiary": "#383a37",
+                    "on-surface-variant": "#42493e",
+                    "surface-container-low": "#eff4ff",
+                    "on-background": "#0b1c30",
+                    "on-primary-fixed-variant": "#23501e",
+                    "secondary-fixed-dim": "#b0cfad",
+                    "surface-container-high": "#dce9ff",
+                    "primary-fixed-dim": "#a1d494",
+                    "secondary": "#4a6549",
+                    "surface-bright": "#f8f9ff",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-secondary-container": "#506b4f",
+                    "outline-variant": "#c2c9bb",
+                    "on-secondary-fixed-variant": "#334d33",
+                    "background": "#f8f9ff",
+                    "on-primary": "#ffffff",
+                    "surface-tint": "#3b6934",
+                    "on-secondary-fixed": "#07200b",
+                    "secondary-container": "#ccebc7",
+                    "surface-container": "#e5eeff",
+                    "surface-variant": "#d3e4fe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "4px",
+                    "margin-mobile": "16px",
+                    "sm": "8px",
+                    "md": "16px",
+                    "xl": "32px",
+                    "gutter": "24px",
+                    "margin-desktop": "40px",
+                    "xs": "4px",
+                    "lg": "24px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["28px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "headline-xl": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hero-overlay {
+            background: linear-gradient(rgba(21, 66, 18, 0.2), rgba(21, 66, 18, 0.4));
+        }
+        .form-shadow {
+            box-shadow: 0px 4px 12px rgba(45, 90, 39, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background selection:bg-primary-fixed-dim">
+<main class="min-h-screen flex flex-col md:flex-row">
+<!-- Shell Suppression Rule: Login is transactional/focused, no Sidebar or TopAppBar rendered -->
+<!-- Left Side: Login Form -->
+<section class="w-full md:w-[45%] xl:w-[40%] flex flex-col justify-center px-margin-mobile md:px-margin-desktop py-xl bg-surface">
+<div class="max-w-md w-full mx-auto">
+<!-- Brand Anchor -->
+<div class="mb-xl flex flex-col items-center md:items-start">
+<img alt="NaturaStock Cusco Logo" class="h-16 w-auto mb-md object-contain" src="data:image/png;base64,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"/>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Bienvenido a NaturaStock</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-sm">Gestión botánica profesional de inventarios.</p>
+</div>
+<form action="#" class="space-y-lg" onsubmit="event.preventDefault();">
+<!-- Email Field -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-xs" for="email">Correo electrónico</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">mail</span>
+<input class="w-full pl-xl pr-md py-md bg-white border border-outline-variant rounded-lg focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none font-body-md text-body-md" id="email" name="email" placeholder="usuario@naturastock.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-xs">
+<label class="font-label-md text-label-md text-on-surface-variant px-xs" for="password">Contraseña</label>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">lock</span>
+<input class="w-full pl-xl pr-md py-md bg-white border border-outline-variant rounded-lg focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none font-body-md text-body-md" id="password" name="password" placeholder="••••••••" required="" type="password"/>
+</div>
+</div>
+<!-- Options -->
+<div class="flex items-center justify-between">
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary/20 cursor-pointer" type="checkbox"/>
+<span class="font-label-sm text-label-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Recordarme</span>
+</label>
+<a class="font-label-sm text-label-sm text-secondary hover:text-primary transition-colors underline-offset-4 hover:underline" href="#">Olvidé mi contraseña</a>
+</div>
+<!-- Action -->
+<button class="w-full py-md px-lg bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:bg-primary-container active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-sm" type="submit">
+<span>Iniciar sesión</span>
+<span class="material-symbols-outlined text-[20px]">login</span>
+</button>
+</form>
+<!-- Support Footer -->
+<footer class="mt-xl pt-lg border-t border-outline-variant/30 text-center md:text-left">
+<p class="font-label-sm text-label-sm text-outline">
+                        ¿No tienes una cuenta? <a class="text-secondary font-bold hover:text-primary transition-colors" href="#">Contactar a Soporte</a>
+</p>
+</footer>
+</div>
+</section>
+<!-- Right Side: Hero Image -->
+<section class="hidden md:block md:w-[55%] xl:w-[60%] relative overflow-hidden">
+<!-- Background Image with data-alt prompt -->
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover" data-alt="A professional, high-end photography shot of artisanal botanical products arranged on a clean marble surface. The scene features dark glass amber bottles, organic herbs like lavender and rosemary, and smooth river stones. The lighting is bright and natural, coming from a nearby large window, creating soft shadows and a crisp, light-mode corporate aesthetic. The overall mood is sophisticated, earthy, and reflects a premium enterprise logistics brand specialized in natural inventory." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMabtZpyX66Mj7SKScU3tjsTVyqygnMvERgJ_zuTmm0TR70q0iOtw3D0S_Cd-YXO1v0ukcNvpmmTRgpmebV9G5m501mcB2kuFro3zEY2x61HHffGvHfaGBy0KH5Jj9A-3BgFSXYF3TLo2fTS1KfpRB4LV_JDCw34717d_yhtlkjd2haO5xBpz4o_ioYlNmcwXRKn_pemrhrfufcz3LDNY0YWMgFOJPvgWS2W6zA7DRbkJJttEKZ0Q8uv_QIPRbrvx44W2pD_lUZ0lr"/>
+</div>
+<!-- Atmospheric Layering -->
+<div class="absolute inset-0 hero-overlay z-10 backdrop-blur-[2px]"></div>
+<!-- Text Content for Aesthetic Depth -->
+<div class="absolute inset-0 z-20 flex flex-col justify-end p-margin-desktop bg-gradient-to-t from-primary/60 to-transparent">
+<div class="max-w-xl text-white">
+<h2 class="font-headline-xl text-headline-xl mb-md">Naturaleza en Orden.</h2>
+<p class="font-body-lg text-body-lg opacity-90 leading-relaxed">
+                        Optimice su cadena de suministro con nuestra plataforma de gestión diseñada específicamente para la industria botánica y de productos naturales en Cusco.
+                    </p>
+<div class="mt-xl flex gap-md">
+<div class="bg-white/10 backdrop-blur-md rounded-lg p-md border border-white/20 flex-1">
+<span class="material-symbols-outlined mb-xs text-inverse-primary" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<div class="font-label-md text-label-md text-white">Control Real</div>
+</div>
+<div class="bg-white/10 backdrop-blur-md rounded-lg p-md border border-white/20 flex-1">
+<span class="material-symbols-outlined mb-xs text-inverse-primary" style="font-variation-settings: 'FILL' 1;">eco</span>
+<div class="font-label-md text-label-md text-white">Gestión Orgánica</div>
+</div>
+<div class="bg-white/10 backdrop-blur-md rounded-lg p-md border border-white/20 flex-1">
+<span class="material-symbols-outlined mb-xs text-inverse-primary" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<div class="font-label-md text-label-md text-white">Analítica Avanzada</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<script>
+        // Micro-interaction: Input focus effects
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.parentElement.classList.add('scale-[1.01]');
+                input.parentElement.parentElement.classList.add('transition-transform');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Simple button active state animation
+        const loginBtn = document.querySelector('button[type="submit"]');
+        loginBtn.addEventListener('mousedown', () => loginBtn.classList.add('scale-95'));
+        loginBtn.addEventListener('mouseup', () => loginBtn.classList.remove('scale-95'));
+        loginBtn.addEventListener('mouseleave', () => loginBtn.classList.remove('scale-95'));
+    </script>
+</body></html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#154212">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>NaturaStock Cusco - Gestión de Inventario</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 10L25 35H75L50 10Z' fill='%232D5A27'/><path d='M50 90V45' stroke='%232D5A27' stroke-width='8' stroke-linecap='round'/><path d='M30 65C30 65 40 55 50 55C60 55 70 65 70 65' stroke='%232D5A27' stroke-width='6' stroke-linecap='round'/><circle cx='50' cy='35' r='5' fill='%23FFFFFF'/></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ==================== LOGIN SCREEN ==================== -->
+<div id="loginScreen" class="login-container">
+  <section class="login-form-section">
+    <div class="login-form-wrapper">
+      <div class="mb-xl" style="text-align: center;">
+        <svg width="64" height="64" viewBox="0 0 100 100" style="margin: 0 auto 16px;">
+          <path d="M50 10L25 35H75L50 10Z" fill="#2D5A27"/>
+          <path d="M50 90V45" stroke="#2D5A27" stroke-width="8" stroke-linecap="round"/>
+          <path d="M30 65C30 65 40 55 50 55C60 55 70 65 70 65" stroke="#2D5A27" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="50" cy="35" r="5" fill="#FFFFFF"/>
+        </svg>
+        <h1 style="font-size:28px;font-weight:700;color:var(--primary);letter-spacing:-0.01em;">Bienvenido a NaturaStock</h1>
+        <p style="font-size:16px;color:var(--on-surface-variant);margin-top:4px;">Gesti&oacute;n bot&aacute;nica profesional de inventarios.</p>
+      </div>
+
+      <form id="loginForm" style="display:flex;flex-direction:column;gap:24px;">
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:14px;font-weight:600;color:var(--on-surface);padding:0 4px;">Usuario</label>
+          <div style="position:relative;">
+            <span class="material-icons" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--outline);font-size:24px;">person</span>
+            <input id="loginUser" type="text" value="admin" style="width:100%;padding:12px 16px 12px 52px;border:1px solid var(--outline-variant);border-radius:var(--radius-md);font-size:16px;font-family:var(--font-family);outline:none;transition:all 0.2s;background:var(--surface-container-lowest);" placeholder="Usuario">
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <label style="font-size:14px;font-weight:600;color:var(--on-surface);padding:0 4px;">Contrase&ntilde;a</label>
+          <div style="position:relative;">
+            <span class="material-icons" style="position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--outline);font-size:24px;">lock</span>
+            <input id="loginPass" type="password" value="123456" style="width:100%;padding:12px 16px 12px 52px;border:1px solid var(--outline-variant);border-radius:var(--radius-md);font-size:16px;font-family:var(--font-family);outline:none;transition:all 0.2s;background:var(--surface-container-lowest);" placeholder="Contrase&ntilde;a">
+          </div>
+        </div>
+
+        <div id="loginError" class="login-error-msg">
+          <span class="material-icons" style="font-size:18px;">error</span>
+          <span>Usuario o contrase&ntilde;a incorrectos</span>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-full" style="gap:8px;">
+          <span>Iniciar sesi&oacute;n</span>
+          <span class="material-icons" style="font-size:20px;">login</span>
+        </button>
+      </form>
+
+      <footer style="margin-top:32px;padding-top:24px;border-top:1px solid rgba(194,201,187,0.3);text-align:center;">
+        <p style="font-size:12px;font-weight:700;color:var(--outline);letter-spacing:0.05em;">
+          &iquest;No tienes una cuenta? <a href="#" style="color:var(--secondary);font-weight:700;text-decoration:none;">Contactar a Soporte</a>
+        </p>
+      </footer>
+    </div>
+  </section>
+
+  <section class="login-hero-section">
+    <img class="login-hero-img" src="https://images.unsplash.com/photo-1597852074816-d933c7d2b988?w=1200&q=80" alt="Productos naturales" onerror="this.style.display='none'">
+    <div class="login-hero-overlay"></div>
+    <div class="login-hero-content">
+      <div style="max-width:480px;">
+        <h2 style="font-size:36px;font-weight:700;color:#fff;letter-spacing:-0.02em;margin-bottom:16px;">Naturaleza en Orden.</h2>
+        <p style="font-size:18px;color:rgba(255,255,255,0.9);line-height:1.6;">
+          Optimice su cadena de suministro con nuestra plataforma de gesti&oacute;n dise&ntilde;ada espec&iacute;ficamente para la industria bot&aacute;nica y de productos naturales en Cusco.
+        </p>
+        <div style="margin-top:32px;display:flex;gap:16px;">
+          <div style="background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.2);flex:1;">
+            <span class="material-icons" style="color:var(--inverse-primary);margin-bottom:8px;">inventory_2</span>
+            <div style="font-size:14px;font-weight:600;color:#fff;">Control Real</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.2);flex:1;">
+            <span class="material-icons" style="color:var(--inverse-primary);margin-bottom:8px;">eco</span>
+            <div style="font-size:14px;font-weight:600;color:#fff;">Gesti&oacute;n Org&aacute;nica</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.2);flex:1;">
+            <span class="material-icons" style="color:var(--inverse-primary);margin-bottom:8px;">analytics</span>
+            <div style="font-size:14px;font-weight:600;color:#fff;">Anal&iacute;tica Avanzada</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ==================== APP SHELL ==================== -->
+<div id="appShell" class="app-shell">
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-brand">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <svg width="40" height="40" viewBox="0 0 100 100">
+          <path d="M50 10L25 35H75L50 10Z" fill="#a1d494"/>
+          <path d="M50 90V45" stroke="#a1d494" stroke-width="8" stroke-linecap="round"/>
+          <path d="M30 65C30 65 40 55 50 55C60 55 70 65 70 65" stroke="#a1d494" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="50" cy="35" r="5" fill="#154212"/>
+        </svg>
+        <div><h1>NaturaStock Cusco</h1><p>Enterprise Logistics</p></div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="#dashboard" class="active" data-page="dashboard"><span class="material-icons">dashboard</span><span>Dashboard</span></a>
+      <a href="#products" data-page="products"><span class="material-icons">inventory_2</span><span>Productos</span></a>
+      <a href="#categories" data-page="categories"><span class="material-icons">category</span><span>Categorías</span></a>
+      <a href="#suppliers" data-page="suppliers"><span class="material-icons">local_shipping</span><span>Proveedores</span></a>
+      <a href="#clients" data-page="clients"><span class="material-icons">people</span><span>Clientes</span></a>
+      <a href="#sales" data-page="sales"><span class="material-icons">point_of_sale</span><span>Ventas</span></a>
+      <a href="#inventory" data-page="inventory"><span class="material-icons">warehouse</span><span>Inventario</span></a>
+      <a href="#reports" data-page="reports"><span class="material-icons">assessment</span><span>Reportes</span></a>
+      <a href="#profile" data-page="profile"><span class="material-icons">person</span><span>Perfil</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" id="logoutBtn"><span class="material-icons">logout</span><span>Cerrar Sesi&oacute;n</span></a>
+    </div>
+  </aside>
+
+  <div class="main-content">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;">
+        <button class="mobile-menu-toggle" id="menuToggle"><span class="material-icons">menu</span></button>
+        <div class="topbar-search">
+          <span class="material-icons" style="font-size:20px;color:var(--on-surface-variant);">search</span>
+          <input type="text" id="globalSearch" placeholder="Buscar productos...">
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button><span class="material-icons">notifications</span></button>
+        <button><span class="material-icons">apps</span></button>
+        <div class="topbar-user">
+          <div class="user-info-small"><p>Admin</p><p>Administrador</p></div>
+          <div class="topbar-avatar"><span class="material-icons" style="font-size:24px;">person</span></div>
+        </div>
+      </div>
+    </header>
+
+    <div class="page-content">
+
+      <!-- DASHBOARD -->
+      <section id="pageDashboard" class="page-section active">
+        <div class="page-header">
+          <div><h2>Dashboard</h2><p>Resumen general del inventario NaturaStock Cusco</p></div>
+          <div class="page-header-actions">
+            <button class="btn btn-primary btn-sm" onclick="location.hash='products'"><span class="material-icons" style="font-size:20px;">add</span><span>Nuevo Producto</span></button>
+          </div>
+        </div>
+        <div class="stats-grid" id="dashboardStats">
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">eco</span></div><span class="stat-trend" id="dashProdTrend"></span></div><p class="stat-label">Total Productos</p><p class="stat-value" id="dashTotalProducts">0</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">warning</span></div><span class="stat-trend negative" id="dashLowStockTrend"></span></div><p class="stat-label">Stock Bajo</p><p class="stat-value" id="dashLowStock">0</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">block</span></div><span class="stat-trend negative" id="dashOutTrend"></span></div><p class="stat-label">Agotados</p><p class="stat-value" id="dashOutOfStock">0</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">payments</span></div><span class="stat-trend" id="dashValueTrend"></span></div><p class="stat-label">Valor Total</p><p class="stat-value" id="dashTotalValue">S/ 0.00</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">swap_vert</span></div><span class="stat-trend neutral">Total</span></div><p class="stat-label">Movimientos</p><p class="stat-value" id="dashTotalMovements">0</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">trending_up</span></div><span class="stat-trend" id="dashSalesTrend"></span></div><p class="stat-label">Ventas del D&iacute;a</p><p class="stat-value" id="dashDaySales">S/ 0.00</p></div>
+        </div>
+        <div class="dashboard-grid-2">
+          <div class="chart-container"><h3>Productos por Categor&iacute;a</h3><div class="chart-bars" id="categoryChart"></div></div>
+          <div class="table-container" style="margin-bottom:0;">
+            <div class="table-header"><h3>&Uacute;ltimos Movimientos</h3></div>
+            <div class="table-wrapper">
+              <table><thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th class="text-right">Cant.</th></tr></thead>
+                <tbody id="dashMovementsTable"><tr><td colspan="4" style="text-align:center;padding:24px;color:var(--on-surface-variant);">No hay movimientos recientes</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCTS -->
+      <section id="pageProducts" class="page-section">
+        <div class="page-header">
+          <div><h2>Gesti&oacute;n de Productos</h2><p>Monitorea y organiza el cat&aacute;logo bot&aacute;nico de NaturaStock.</p></div>
+          <div class="page-header-actions"><button class="btn btn-primary" onclick="openProductModal()"><span class="material-icons" style="font-size:20px;">add</span><span>+ Agregar Producto</span></button></div>
+        </div>
+        <div class="stats-grid" id="productStats">
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">eco</span></div></div><p class="stat-label">Total Productos</p><p class="stat-value" id="prodTotal">0</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">warning</span></div></div><p class="stat-label">Stock Bajo</p><p class="stat-value" id="prodLowStock">0</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">payments</span></div></div><p class="stat-label">Valor Inventario</p><p class="stat-value" id="prodValue">S/ 0.00</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">category</span></div></div><p class="stat-label">Categor&iacute;as</p><p class="stat-value" id="prodCategories">0</p></div>
+        </div>
+        <div class="table-container">
+          <div class="table-header">
+            <h3>Listado de Productos</h3>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <select id="filterCategory" style="padding:6px 12px;border:1px solid var(--outline-variant);border-radius:var(--radius-md);font-size:14px;font-family:var(--font-family);background:var(--surface-container-lowest);"><option value="">Todas las categor&iacute;as</option></select>
+              <select id="filterStatus" style="padding:6px 12px;border:1px solid var(--outline-variant);border-radius:var(--radius-md);font-size:14px;font-family:var(--font-family);background:var(--surface-container-lowest);"><option value="">Todos los estados</option><option value="disponible">Disponible</option><option value="bajo_stock">Stock Bajo</option><option value="agotado">Agotado</option></select>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <table><thead><tr><th>Nombre</th><th>Categor&iacute;a</th><th class="text-right">Precio</th><th class="text-right">Stock</th><th>Estado</th><th class="text-center">Acciones</th></tr></thead>
+              <tbody id="productsTableBody"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--on-surface-variant);">Cargando productos...</td></tr></tbody>
+            </table>
+          </div>
+          <div class="table-pagination">
+            <span id="productPaginationInfo">Mostrando 0 productos</span>
+            <div class="pagination-buttons" id="productPagination"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- INVENTORY -->
+      <section id="pageInventory" class="page-section">
+        <div class="page-header">
+          <div><h2>Inventario y Movimientos</h2><p>Gesti&oacute;n hist&oacute;rica y flujo de productos en Cusco</p></div>
+          <div class="page-header-actions"><button class="btn btn-primary" onclick="openMovementModal()"><span class="material-icons" style="font-size:20px;">add</span><span>Registrar Movimiento</span></button></div>
+        </div>
+        <div class="stats-grid" id="inventoryStats">
+          <div class="stat-card"><p class="stat-label">Entradas del Mes</p><p class="stat-value" id="invEntries" style="color:var(--primary-container);">0</p></div>
+          <div class="stat-card"><p class="stat-label">Salidas del Mes</p><p class="stat-value" id="invExits" style="color:var(--tertiary);">0</p></div>
+          <div class="stat-card"><p class="stat-label">Total Movimientos</p><p class="stat-value" id="invTotal">0</p></div>
+        </div>
+        <div class="table-container">
+          <div class="table-header"><h3>Historial de Movimientos</h3><span style="font-size:12px;font-weight:700;color:var(--on-surface-variant);" id="movementCount">Mostrando todos los movimientos</span></div>
+          <div class="table-wrapper">
+            <table><thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th class="text-right">Cantidad</th><th>Observaci&oacute;n</th></tr></thead>
+              <tbody id="movementsTableBody"><tr><td colspan="5" style="text-align:center;padding:24px;color:var(--on-surface-variant);">Cargando movimientos...</td></tr></tbody>
+            </table>
+          </div>
+          <div class="table-pagination">
+            <span id="movementPaginationInfo">Mostrando 0 movimientos</span>
+            <div class="pagination-buttons" id="movementPagination"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- REPORTS -->
+      <section id="pageReports" class="page-section">
+        <div class="page-header"><div><h2>Reportes</h2><p>Resumen y an&aacute;lisis del inventario NaturaStock</p></div></div>
+        <div class="report-stats-grid">
+          <div class="report-card"><h4>Total Productos</h4><p class="stat-value" id="repTotalProducts">0</p></div>
+          <div class="report-card"><h4>Stock Bajo</h4><p class="stat-value" style="color:var(--error);" id="repLowStock">0</p></div>
+          <div class="report-card"><h4>Agotados</h4><p class="stat-value" style="color:var(--on-surface-variant);" id="repOutOfStock">0</p></div>
+          <div class="report-card"><h4>Valor Total Inventario</h4><p class="stat-value" id="repTotalValue">S/ 0.00</p></div>
+        </div>
+        <div class="dashboard-grid-2">
+          <div class="table-container" style="margin-bottom:0;">
+            <div class="table-header"><h3>Productos con Stock Bajo</h3></div>
+            <div class="table-wrapper">
+              <table><thead><tr><th>Producto</th><th class="text-right">Stock</th><th class="text-right">Stock M&iacute;n.</th></tr></thead>
+                <tbody id="repLowStockTable"><tr><td colspan="3" style="text-align:center;padding:24px;color:var(--on-surface-variant);">Sin datos</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="chart-container" style="margin-bottom:0;"><h3>Productos por Categor&iacute;a</h3><div id="reportCategoryBars"></div></div>
+        </div>
+      </section>
+
+      <!-- CATEGORIES -->
+      <section id="pageCategories" class="page-section">
+        <div class="page-header">
+          <div><h2>Gestión de Categorías</h2><p>Organiza los productos por categorías botánicas.</p></div>
+          <div class="page-header-actions"><button class="btn btn-primary" onclick="openCategoryModal()"><span class="material-icons" style="font-size:20px;">add</span><span>+ Agregar Categoría</span></button></div>
+        </div>
+        <div class="stats-grid" id="categoryStats">
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">category</span></div></div><p class="stat-label">Total Categorías</p><p class="stat-value" id="catTotal">0</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">inventory_2</span></div></div><p class="stat-label">Productos</p><p class="stat-value" id="catProducts">0</p></div>
+        </div>
+        <div class="table-container">
+          <div class="table-header"><h3>Listado de Categorías</h3></div>
+          <div class="table-wrapper">
+            <table><thead><tr><th>Nombre</th><th>Descripción</th><th>Productos</th><th class="text-center">Acciones</th></tr></thead>
+              <tbody id="categoriesTableBody"><tr><td colspan="4" style="text-align:center;padding:24px;color:var(--on-surface-variant);">Cargando categorías...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUPPLIERS -->
+      <section id="pageSuppliers" class="page-section">
+        <div class="page-header">
+          <div><h2>Gestión de Proveedores</h2><p>Administra tus proveedores de productos naturales.</p></div>
+          <div class="page-header-actions"><button class="btn btn-primary" onclick="openSupplierModal()"><span class="material-icons" style="font-size:20px;">add</span><span>+ Agregar Proveedor</span></button></div>
+        </div>
+        <div class="stats-grid" id="supplierStats">
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">local_shipping</span></div></div><p class="stat-label">Total Proveedores</p><p class="stat-value" id="supTotal">0</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">inventory_2</span></div></div><p class="stat-label">Productos Asociados</p><p class="stat-value" id="supProducts">0</p></div>
+        </div>
+        <div class="table-container">
+          <div class="table-header"><h3>Listado de Proveedores</h3></div>
+          <div class="table-wrapper">
+            <table><thead><tr><th>Nombre</th><th>Contacto</th><th>Teléfono</th><th>Email</th><th>Dirección</th><th class="text-center">Acciones</th></tr></thead>
+              <tbody id="suppliersTableBody"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--on-surface-variant);">Cargando proveedores...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- CLIENTS -->
+      <section id="pageClients" class="page-section">
+        <div class="page-header">
+          <div><h2>Gestión de Clientes</h2><p>Registro de clientes de NaturaStock Cusco.</p></div>
+          <div class="page-header-actions"><button class="btn btn-primary" onclick="openClientModal()"><span class="material-icons" style="font-size:20px;">add</span><span>+ Agregar Cliente</span></button></div>
+        </div>
+        <div class="stats-grid" id="clientStats">
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">people</span></div></div><p class="stat-label">Total Clientes</p><p class="stat-value" id="cliTotal">0</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">receipt_long</span></div></div><p class="stat-label">Ventas Realizadas</p><p class="stat-value" id="cliSales">0</p></div>
+        </div>
+        <div class="table-container">
+          <div class="table-header"><h3>Listado de Clientes</h3></div>
+          <div class="table-wrapper">
+            <table><thead><tr><th>Nombre</th><th>Documento</th><th>Teléfono</th><th>Email</th><th>Dirección</th><th class="text-center">Acciones</th></tr></thead>
+              <tbody id="clientsTableBody"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--on-surface-variant);">Cargando clientes...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- SALES -->
+      <section id="pageSales" class="page-section">
+        <div class="page-header">
+          <div><h2>Registro de Ventas</h2><p>Gestiona las ventas de productos naturales.</p></div>
+          <div class="page-header-actions"><button class="btn btn-primary" onclick="openSaleModal()"><span class="material-icons" style="font-size:20px;">add</span><span>+ Nueva Venta</span></button></div>
+        </div>
+        <div class="stats-grid" id="salesStats">
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">point_of_sale</span></div></div><p class="stat-label">Ventas Hoy</p><p class="stat-value" id="saleToday">0</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">payments</span></div></div><p class="stat-label">Ingresos Hoy</p><p class="stat-value" id="saleRevenue">S/ 0.00</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">receipt</span></div></div><p class="stat-label">Total Ventas</p><p class="stat-value" id="saleTotal">0</p></div>
+          <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">trending_up</span></div></div><p class="stat-label">Ingreso Total</p><p class="stat-value" id="saleTotalRevenue">S/ 0.00</p></div>
+        </div>
+        <div class="table-container">
+          <div class="table-header"><h3>Historial de Ventas</h3>
+            <span style="font-size:12px;font-weight:700;color:var(--on-surface-variant);" id="saleCount">Mostrando todas las ventas</span>
+          </div>
+          <div class="table-wrapper">
+            <table><thead><tr><th>Comprobante</th><th>Cliente</th><th class="text-right">Total</th><th>Tipo</th><th>Fecha</th><th class="text-center">Acciones</th></tr></thead>
+              <tbody id="salesTableBody"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--on-surface-variant);">Cargando ventas...</td></tr></tbody>
+            </table>
+          </div>
+          <div class="table-pagination">
+            <span id="salePaginationInfo">Mostrando 0 ventas</span>
+            <div class="pagination-buttons" id="salePagination"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PROFILE -->
+      <section id="pageProfile" class="page-section">
+        <div class="page-header">
+          <div><h2>Mi Perfil</h2><p>Gestiona tu informaci&oacute;n personal y preferencias de cuenta.</p></div>
+          <div class="page-header-actions"><button class="btn btn-error" id="profileLogoutBtn"><span class="material-icons" style="font-size:20px;">logout</span>Cerrar Sesi&oacute;n</button></div>
+        </div>
+        <div class="profile-grid">
+          <div class="profile-card">
+            <div class="bg-blob"></div>
+            <div class="profile-header">
+              <div class="profile-avatar"><span class="material-icons" style="font-size:48px;color:var(--primary);">person</span></div>
+              <div class="profile-details">
+                <div class="profile-status"><span class="badge badge-success"><span class="badge-dot"></span> Activo</span><span style="font-size:14px;color:var(--on-surface-variant);"> Miembro desde Jun 2024</span></div>
+                <h3 class="profile-name">Admin</h3>
+                <p class="profile-role">Administrador del Sistema &mdash; NaturaStock Cusco</p>
+                <div class="profile-info-grid">
+                  <div class="profile-info-item"><label>Correo Electr&oacute;nico</label><p><span class="material-icons" style="font-size:20px;color:var(--primary);">mail</span> admin@naturastock.pe</p></div>
+                  <div class="profile-info-item"><label>Tel&eacute;fono</label><p><span class="material-icons" style="font-size:20px;color:var(--primary);">call</span> +51 984 000 000</p></div>
+                  <div class="profile-info-item"><label>Ubicaci&oacute;n</label><p><span class="material-icons" style="font-size:20px;color:var(--primary);">location_on</span> Cusco, Per&uacute;</p></div>
+                  <div class="profile-info-item"><label>Cargo</label><p><span class="material-icons" style="font-size:20px;color:var(--primary);">badge</span> Administrador</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="profile-card">
+            <h4 style="font-size:20px;font-weight:600;color:var(--primary);margin-bottom:16px;">Seguridad</h4>
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(194,201,187,0.2);">
+                <div style="display:flex;align-items:center;gap:12px;"><span class="material-icons" style="color:var(--on-surface-variant);">verified_user</span><span style="font-size:14px;">2FA Activado</span></div>
+                <div style="width:40px;height:20px;background:rgba(21,66,18,0.2);border-radius:999px;position:relative;"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;background:var(--primary);border-radius:50%;"></div></div>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;">
+                <div style="display:flex;align-items:center;gap:12px;"><span class="material-icons" style="color:var(--on-surface-variant);">history</span><span style="font-size:14px;">&Uacute;ltimo acceso</span></div>
+                <span style="font-size:12px;font-weight:700;color:var(--on-surface-variant);">Ahora</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div id="productModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="productModalTitle">Registrar Producto</h3>
+      <button class="modal-close" onclick="closeModal('productModal')"><span class="material-icons">close</span></button>
+    </div>
+    <form id="productForm">
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="grid-column:1/-1;"><div class="form-group"><label>Nombre del Producto</label><input type="text" id="prodName" placeholder="Ej. Miel de Abeja Pura 500ml" required></div></div>
+          <div class="form-group">
+            <label>Categor&iacute;a</label>
+            <select id="prodCategory" required>
+              <option value="">Seleccionar</option>
+              <option value="Infusiones">Infusiones</option>
+              <option value="Suplementos">Suplementos</option>
+              <option value="Hierbas">Hierbas</option>
+              <option value="Mieles">Mieles</option>
+              <option value="Medicinales">Medicinales</option>
+              <option value="Cosmética natural">Cosmética natural</option>
+            </select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="form-group"><label>Precio (S/)</label><input type="number" id="prodPrice" placeholder="0.00" step="0.01" min="0" required></div>
+            <div class="form-group"><label>Stock</label><input type="number" id="prodStock" placeholder="0" min="0" required></div>
+          </div>
+          <div class="form-group"><label>Stock M&iacute;nimo</label><input type="number" id="prodMinStock" placeholder="5" min="0" value="5"></div>
+          <div style="grid-column:1/-1;"><div class="form-group"><label>Descripci&oacute;n</label><textarea id="prodDesc" placeholder="Describa las propiedades y el origen del producto..." rows="3"></textarea></div></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('productModal')">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="productSubmitBtn">Guardar Producto</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MOVEMENT MODAL -->
+<div id="movementModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Registrar Movimiento</h3>
+      <button class="modal-close" onclick="closeModal('movementModal')"><span class="material-icons">close</span></button>
+    </div>
+    <form id="movementForm">
+      <div class="modal-body">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="form-group"><label>Producto</label><select id="movProduct" required><option value="">Seleccionar producto</option></select></div>
+          <div class="form-group"><label>Tipo de Movimiento</label><select id="movType" required><option value="">Seleccionar</option><option value="entrada">Entrada</option><option value="salida">Salida</option></select></div>
+          <div class="form-group"><label>Cantidad</label><input type="number" id="movQuantity" placeholder="0" min="1" required></div>
+          <div class="form-group"><label>Observaci&oacute;n</label><textarea id="movDesc" placeholder="Motivo del movimiento..." rows="2"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('movementModal')">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Registrar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- CATEGORY MODAL -->
+<div id="categoryModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="categoryModalTitle">Registrar Categoría</h3>
+      <button class="modal-close" onclick="closeModal('categoryModal')"><span class="material-icons">close</span></button>
+    </div>
+    <form id="categoryForm">
+      <div class="modal-body">
+        <div style="display:flex;flex-direction:column;gap:16px;">
+          <div class="form-group"><label>Nombre de la Categoría</label><input type="text" id="catName" placeholder="Ej. Infusiones" required></div>
+          <div class="form-group"><label>Descripción</label><textarea id="catDesc" placeholder="Descripción de la categoría..." rows="3"></textarea></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('categoryModal')">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="categorySubmitBtn">Guardar Categoría</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- SUPPLIER MODAL -->
+<div id="supplierModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="supplierModalTitle">Registrar Proveedor</h3>
+      <button class="modal-close" onclick="closeModal('supplierModal')"><span class="material-icons">close</span></button>
+    </div>
+    <form id="supplierForm">
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="grid-column:1/-1;"><div class="form-group"><label>Nombre del Proveedor</label><input type="text" id="supName" placeholder="Ej. Hierbas del Valle SRL" required></div></div>
+          <div class="form-group"><label>Contacto</label><input type="text" id="supContact" placeholder="Nombre del contacto"></div>
+          <div class="form-group"><label>Teléfono</label><input type="text" id="supPhone" placeholder="+51 999 000 000"></div>
+          <div class="form-group"><label>Email</label><input type="email" id="supEmail" placeholder="contacto@proveedor.pe"></div>
+          <div style="grid-column:1/-1;"><div class="form-group"><label>Dirección</label><textarea id="supAddress" placeholder="Dirección del proveedor..." rows="2"></textarea></div></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('supplierModal')">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="supplierSubmitBtn">Guardar Proveedor</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- CLIENT MODAL -->
+<div id="clientModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="clientModalTitle">Registrar Cliente</h3>
+      <button class="modal-close" onclick="closeModal('clientModal')"><span class="material-icons">close</span></button>
+    </div>
+    <form id="clientForm">
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <div style="grid-column:1/-1;"><div class="form-group"><label>Nombre del Cliente</label><input type="text" id="cliName" placeholder="Ej. Juan Pérez" required></div></div>
+          <div class="form-group"><label>Tipo Documento</label><select id="cliDocType"><option value="DNI">DNI</option><option value="RUC">RUC</option><option value="Carné de Extranjería">Carné de Extranjería</option></select></div>
+          <div class="form-group"><label>Número Documento</label><input type="text" id="cliDocNum" placeholder="12345678" required></div>
+          <div class="form-group"><label>Teléfono</label><input type="text" id="cliPhone" placeholder="+51 987 654 321"></div>
+          <div class="form-group"><label>Email</label><input type="email" id="cliEmail" placeholder="cliente@email.com"></div>
+          <div style="grid-column:1/-1;"><div class="form-group"><label>Dirección</label><textarea id="cliAddress" placeholder="Dirección del cliente..." rows="2"></textarea></div></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('clientModal')">Cancelar</button>
+        <button type="submit" class="btn btn-primary" id="clientSubmitBtn">Guardar Cliente</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- SALE MODAL -->
+<div id="saleModal" class="modal-overlay">
+  <div class="modal" style="max-width:700px;">
+    <div class="modal-header">
+      <h3>Nueva Venta</h3>
+      <button class="modal-close" onclick="closeModal('saleModal')"><span class="material-icons">close</span></button>
+    </div>
+    <form id="saleForm">
+      <div class="modal-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+          <div class="form-group"><label>Cliente</label><select id="saleClient" required><option value="">Seleccionar cliente</option></select></div>
+          <div class="form-group"><label>Tipo Comprobante</label><select id="saleDocType"><option value="Boleta">Boleta</option><option value="Factura">Factura</option></select></div>
+        </div>
+        <h4 style="font-size:16px;font-weight:600;color:var(--primary);margin-bottom:12px;">Detalle de Venta</h4>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;" id="saleDetailsContainer">
+          <div class="sale-detail-row" style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:end;">
+            <div class="form-group"><label>Producto</label><select class="sale-product" required><option value="">Seleccionar</option></select></div>
+            <div class="form-group"><label>Cant.</label><input type="number" class="sale-qty" value="1" min="1" required></div>
+            <div class="form-group"><label>P. Unit.</label><input type="text" class="sale-price" readonly style="background:var(--surface-container-low);"></div>
+            <div class="form-group"><label>Subtotal</label><input type="text" class="sale-subtotal" readonly style="background:var(--surface-container-low);"></div>
+            <button type="button" class="btn btn-icon" onclick="removeSaleDetailRow(this)" style="margin-bottom:4px;color:var(--error);"><span class="material-icons">remove_circle</span></button>
+          </div>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="addSaleDetailRow()" style="margin-bottom:16px;"><span class="material-icons" style="font-size:18px;">add</span> Agregar Producto</button>
+        <div style="display:flex;justify-content:flex-end;padding:12px;background:var(--surface-container-low);border-radius:var(--radius-md);">
+          <div style="text-align:right;">
+            <span style="font-size:14px;font-weight:600;color:var(--on-surface-variant);">Total:</span>
+            <span style="font-size:28px;font-weight:600;color:var(--primary);margin-left:12px;" id="saleTotalDisplay">S/ 0.00</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeModal('saleModal')">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Registrar Venta</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- SALE DETAIL MODAL -->
+<div id="saleDetailModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Detalle de Venta</h3>
+      <button class="modal-close" onclick="closeModal('saleDetailModal')"><span class="material-icons">close</span></button>
+    </div>
+    <div class="modal-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;" id="saleDetailInfo"></div>
+      <h4 style="font-size:16px;font-weight:600;color:var(--primary);margin-bottom:12px;">Productos</h4>
+      <div class="table-wrapper">
+        <table><thead><tr><th>Producto</th><th class="text-right">Cant.</th><th class="text-right">P. Unit.</th><th class="text-right">Subtotal</th></tr></thead>
+          <tbody id="saleDetailBody"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" onclick="closeModal('saleDetailModal')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
