@@ -21,6 +21,7 @@ let productFilterStatus = '';
 
 function initSupabase() {
   try {
+<<<<<<< HEAD
     if (typeof SUPABASE_CONFIG === 'undefined') {
       isOffline = true;
       return;
@@ -40,6 +41,14 @@ function initSupabase() {
       return;
     }
     supabase = lib.createClient(url, key);
+=======
+    const lib = typeof supabaseClient !== 'undefined' ? supabaseClient : window.supabase;
+    if (!lib || SUPABASE_CONFIG.url.includes('tu-proyecto')) {
+      isOffline = true;
+      return;
+    }
+    supabase = lib.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+>>>>>>> f79a8a287dc281f2cc26bbfdc47af59a0094a974
     isOffline = false;
   } catch (e) {
     isOffline = true;
