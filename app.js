@@ -1,4 +1,4 @@
-let supabase = null;
+let supabaseClient = null;
 let isOffline = false;
 
 let products = [];
@@ -39,7 +39,7 @@ function initSupabase() {
       isOffline = true;
       return;
     }
-    supabase = lib.createClient(url, key);
+    supabaseClient = lib.createClient(url, key);
     isOffline = false;
   } catch (e) {
     isOffline = true;
@@ -55,10 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupGlobalSearch();
   setupModals();
   setupProfileLogout();
-
-  if (isOffline) {
-    loadExampleData();
-  }
 });
 
 function setupLogin() {
@@ -139,14 +135,14 @@ async function loadData() {
   }
   try {
     const [prodRes, movRes, catRes, supRes, cliRes, saleRes, detailRes, alertRes] = await Promise.all([
-      supabase.from('productos').select('*, categorias(nombre), proveedores(nombre)').order('created_at', { ascending: false }),
-      supabase.from('movimientos_inventario').select('*, productos(nombre)').order('fecha_movimiento', { ascending: false }),
-      supabase.from('categorias').select('*').order('nombre'),
-      supabase.from('proveedores').select('*').order('nombre'),
-      supabase.from('clientes').select('*').order('nombre'),
-      supabase.from('ventas').select('*, clientes(nombre)').order('created_at', { ascending: false }),
-      supabase.from('detalle_ventas').select('*, productos(nombre, precio)'),
-      supabase.from('alertas_stock').select('*, productos(nombre)').order('created_at', { ascending: false }).limit(20)
+      supabaseClient.from('productos').select('*, categorias(nombre), proveedores(nombre)').order('created_at', { ascending: false }),
+      supabaseClient.from('movimientos_inventario').select('*, productos(nombre)').order('fecha_movimiento', { ascending: false }),
+      supabaseClient.from('categorias').select('*').order('nombre'),
+      supabaseClient.from('proveedores').select('*').order('nombre'),
+      supabaseClient.from('clientes').select('*').order('nombre'),
+      supabaseClient.from('ventas').select('*, clientes(nombre)').order('created_at', { ascending: false }),
+      supabaseClient.from('detalle_ventas').select('*, productos(nombre, precio)'),
+      supabaseClient.from('alertas_stock').select('*, productos(nombre)').order('created_at', { ascending: false }).limit(20)
     ]);
     if (prodRes.data) products = prodRes.data.map(p => normalizeProduct(p));
     if (movRes.data) movements = movRes.data;
@@ -157,7 +153,8 @@ async function loadData() {
     if (detailRes.data) saleDetails = detailRes.data;
     if (alertRes.data) alerts = alertRes.data;
   } catch (e) {
-    showToast('Error al conectar con Supabase. Usando datos de ejemplo.', 'error');
+    console.error('Error al conectar con Supabase:', e);
+    showToast('Error al conectar con Supabase: ' + (e.message || 'desconocido'), 'error');
     loadExampleData();
     isOffline = true;
   }
@@ -535,7 +532,7 @@ function setupModals() {
 async function createProduct(data) {
   if (!isOffline) {
     try {
-      const { data: inserted, error } = await supabase.from('productos').insert(data).select('*, categorias(nombre), proveedores(nombre)');
+      const { data: inserted, error } = await supabaseClient.from('productos').insert(data).select('*, categorias(nombre), proveedores(nombre)');
       if (error) throw error;
       if (inserted) products.unshift(normalizeProduct(inserted[0]));
     } catch (e) {
@@ -568,7 +565,7 @@ function addLocalProduct(data) {
 async function updateProduct(id, data) {
   if (!isOffline) {
     try {
-      const { error } = await supabase.from('productos').update(data).eq('id', id);
+      const { error } = await supabaseClient.from('productos').update(data).eq('id', id);
       if (error) throw error;
     } catch (e) {
       showToast('Error al actualizar en Supabase.', 'error');
@@ -590,8 +587,8 @@ async function deleteProduct(id) {
   if (!confirm('¿Está seguro que desea eliminar "' + (p?.nombre || '') + '"?')) return;
   if (!isOffline) {
     try {
-      await supabase.from('movimientos_inventario').delete().eq('producto_id', id);
-      await supabase.from('productos').delete().eq('id', id);
+      await supabaseClient.from('movimientos_inventario').delete().eq('producto_id', id);
+      await supabaseClient.from('productos').delete().eq('id', id);
     } catch (e) { showToast('Error al eliminar en Supabase.', 'error'); }
   }
   products = products.filter(pr => pr.id !== id);
@@ -647,7 +644,7 @@ function editCategory(id) { openCategoryModal(id); }
 async function createCategory(data) {
   if (!isOffline) {
     try {
-      const { data: inserted, error } = await supabase.from('categorias').insert(data).select();
+      const { data: inserted, error } = await supabaseClient.from('categorias').insert(data).select();
       if (error) throw error;
       if (inserted) categories.push(inserted[0]);
     } catch (e) { showToast('Error al guardar en Supabase.', 'error'); addLocalCategory(data); }
@@ -665,7 +662,7 @@ function addLocalCategory(data) {
 async function updateCategory(id, data) {
   if (!isOffline) {
     try {
-      await supabase.from('categorias').update(data).eq('id', id);
+      await supabaseClient.from('categorias').update(data).eq('id', id);
     } catch (e) { showToast('Error al actualizar en Supabase.', 'error'); }
   }
   const idx = categories.findIndex(c => c.id === id);
@@ -677,7 +674,7 @@ async function updateCategory(id, data) {
 async function deleteCategory(id) {
   if (!confirm('¿Está seguro de eliminar esta categoría?')) return;
   if (!isOffline) {
-    try { await supabase.from('categorias').delete().eq('id', id); } catch (e) { showToast('Error al eliminar.', 'error'); }
+    try { await supabaseClient.from('categorias').delete().eq('id', id); } catch (e) { showToast('Error al eliminar.', 'error'); }
   }
   categories = categories.filter(c => c.id !== id);
   showToast('Categoría eliminada correctamente', 'success');
@@ -731,7 +728,7 @@ function editSupplier(id) { openSupplierModal(id); }
 async function createSupplier(data) {
   if (!isOffline) {
     try {
-      const { data: inserted, error } = await supabase.from('proveedores').insert(data).select();
+      const { data: inserted, error } = await supabaseClient.from('proveedores').insert(data).select();
       if (error) throw error;
       if (inserted) suppliers.push(inserted[0]);
     } catch (e) { showToast('Error al guardar en Supabase.', 'error'); addLocalSupplier(data); }
@@ -748,7 +745,7 @@ function addLocalSupplier(data) {
 
 async function updateSupplier(id, data) {
   if (!isOffline) {
-    try { await supabase.from('proveedores').update(data).eq('id', id); } catch (e) { showToast('Error al actualizar.', 'error'); }
+    try { await supabaseClient.from('proveedores').update(data).eq('id', id); } catch (e) { showToast('Error al actualizar.', 'error'); }
   }
   const idx = suppliers.findIndex(s => s.id === id);
   if (idx !== -1) suppliers[idx] = { ...suppliers[idx], ...data };
@@ -759,7 +756,7 @@ async function updateSupplier(id, data) {
 async function deleteSupplier(id) {
   if (!confirm('¿Está seguro de eliminar este proveedor?')) return;
   if (!isOffline) {
-    try { await supabase.from('proveedores').delete().eq('id', id); } catch (e) { showToast('Error al eliminar.', 'error'); }
+    try { await supabaseClient.from('proveedores').delete().eq('id', id); } catch (e) { showToast('Error al eliminar.', 'error'); }
   }
   suppliers = suppliers.filter(s => s.id !== id);
   showToast('Proveedor eliminado correctamente', 'success');
@@ -814,7 +811,7 @@ function editClient(id) { openClientModal(id); }
 async function createClient(data) {
   if (!isOffline) {
     try {
-      const { data: inserted, error } = await supabase.from('clientes').insert(data).select();
+      const { data: inserted, error } = await supabaseClient.from('clientes').insert(data).select();
       if (error) throw error;
       if (inserted) clients.push(inserted[0]);
     } catch (e) { showToast('Error al guardar en Supabase.', 'error'); addLocalClient(data); }
@@ -831,7 +828,7 @@ function addLocalClient(data) {
 
 async function updateClient(id, data) {
   if (!isOffline) {
-    try { await supabase.from('clientes').update(data).eq('id', id); } catch (e) { showToast('Error al actualizar.', 'error'); }
+    try { await supabaseClient.from('clientes').update(data).eq('id', id); } catch (e) { showToast('Error al actualizar.', 'error'); }
   }
   const idx = clients.findIndex(c => c.id === id);
   if (idx !== -1) clients[idx] = { ...clients[idx], ...data };
@@ -842,7 +839,7 @@ async function updateClient(id, data) {
 async function deleteClient(id) {
   if (!confirm('¿Está seguro de eliminar este cliente?')) return;
   if (!isOffline) {
-    try { await supabase.from('clientes').delete().eq('id', id); } catch (e) { showToast('Error al eliminar.', 'error'); }
+    try { await supabaseClient.from('clientes').delete().eq('id', id); } catch (e) { showToast('Error al eliminar.', 'error'); }
   }
   clients = clients.filter(c => c.id !== id);
   showToast('Cliente eliminado correctamente', 'success');
@@ -917,8 +914,8 @@ async function deleteSale(id) {
   if (!confirm('¿Está seguro de eliminar esta venta? Se eliminarán también los detalles.')) return;
   if (!isOffline) {
     try {
-      await supabase.from('detalle_ventas').delete().eq('venta_id', id);
-      await supabase.from('ventas').delete().eq('id', id);
+      await supabaseClient.from('detalle_ventas').delete().eq('venta_id', id);
+      await supabaseClient.from('ventas').delete().eq('id', id);
     } catch (e) { showToast('Error al eliminar en Supabase.', 'error'); }
   }
   saleDetails = saleDetails.filter(d => d.venta_id !== id);
@@ -1023,21 +1020,21 @@ async function createSale() {
 
   if (!isOffline) {
     try {
-      const { data: venta, error: ventaError } = await supabase.from('ventas').insert({
+      const { data: venta, error: ventaError } = await supabaseClient.from('ventas').insert({
         cliente_id, tipo_comprobante, total
       }).select();
       if (ventaError) throw ventaError;
       if (venta && venta[0]) {
         const detalles = rows.map(r => ({ ...r, venta_id: venta[0].id }));
-        const { error: detError } = await supabase.from('detalle_ventas').insert(detalles);
+        const { error: detError } = await supabaseClient.from('detalle_ventas').insert(detalles);
         if (detError) throw detError;
         for (const r of rows) {
-          await supabase.from('movimientos_inventario').insert({
+          await supabaseClient.from('movimientos_inventario').insert({
             producto_id: r.producto_id, tipo_movimiento: 'salida',
             cantidad: r.cantidad, descripcion: 'Venta #' + venta[0].numero_comprobante
           });
         }
-        const { data: fullVenta } = await supabase.from('ventas').select('*, clientes(nombre)').eq('id', venta[0].id).single();
+        const { data: fullVenta } = await supabaseClient.from('ventas').select('*, clientes(nombre)').eq('id', venta[0].id).single();
         if (fullVenta) sales.unshift(fullVenta);
         const detailInserts = detalles.map(d => ({ ...d, productos: products.find(p => p.id === d.producto_id) ? { nombre: products.find(p => p.id === d.producto_id).nombre } : {} }));
         saleDetails.unshift(...detailInserts);
@@ -1122,7 +1119,7 @@ async function createMovement(data) {
   if (data.cantidad <= 0) { showToast('La cantidad debe ser mayor a 0', 'error'); return; }
   if (!isOffline) {
     try {
-      const { data: inserted, error } = await supabase.from('movimientos_inventario').insert(data).select();
+      const { data: inserted, error } = await supabaseClient.from('movimientos_inventario').insert(data).select();
       if (error) throw error;
       if (inserted) movements.unshift(inserted[0]);
     } catch (e) { showToast('Error al registrar en Supabase.', 'error'); addLocalMovement(data); }
