@@ -358,6 +358,131 @@ function getFilteredProducts() {
   });
 }
 
+const productInfoData = {
+  'Miel de Abeja': {
+    category: 'Alimentos',
+    description: 'Miel natural obtenida de abejas de los valles del Cusco.',
+    queEs: 'Miel natural obtenida de abejas de los valles del Cusco.',
+    paraQueSirve: 'Ayuda a endulzar naturalmente alimentos y bebidas.',
+    beneficios: ['Fuente natural de energ\u00eda', 'Aporta antioxidantes', 'Sabor natural'],
+    formaDeUso: 'Consumir directamente o agregar a bebidas.',
+    presentacion: 'Frasco de 500ml',
+    infoComplementaria: 'Producto 100% natural, sin aditivos ni conservantes.'
+  },
+  'Mu\u00f1a Andina': {
+    category: 'Infusiones',
+    description: 'Hierba arom\u00e1tica tradicional de los Andes.',
+    queEs: 'Hierba arom\u00e1tica tradicional de los Andes.',
+    paraQueSirve: 'Se utiliza en infusiones digestivas.',
+    beneficios: ['Aroma refrescante', 'Uso tradicional andino', 'F\u00e1cil preparaci\u00f3n'],
+    formaDeUso: 'Preparar una infusi\u00f3n con agua caliente.',
+    presentacion: 'Bolsa de 100g',
+    infoComplementaria: 'Producto natural de los valles andinos.'
+  },
+  'Maca': {
+    category: 'Suplementos',
+    description: 'Suplemento natural elaborado a base de maca negra.',
+    queEs: 'Suplemento natural elaborado a base de maca negra.',
+    paraQueSirve: 'Complemento alimenticio tradicional.',
+    beneficios: ['Producto andino', 'F\u00e1cil incorporaci\u00f3n a bebidas', 'Alto valor nutricional'],
+    formaDeUso: 'Mezclar con jugos, leche o batidos.',
+    presentacion: 'Bolsa de 250g',
+    infoComplementaria: 'Maca negra seleccionada de la meseta de Jun\u00edn.'
+  },
+  'Quinua': {
+    category: 'Alimentos',
+    description: 'Grano andino de alta calidad.',
+    queEs: 'Grano andino de alta calidad.',
+    paraQueSirve: 'Alimento nutritivo para diversas preparaciones.',
+    beneficios: ['Fuente de prote\u00edna vegetal', 'Vers\u00e1til en cocina', 'Producto natural'],
+    formaDeUso: 'Cocinar antes de consumir.',
+    presentacion: 'Bolsa de 1kg',
+    infoComplementaria: 'Quinua real org\u00e1nica certificada.'
+  },
+  'U\u00f1a de Gato': {
+    category: 'Infusiones',
+    description: 'Corteza natural proveniente de la Amazon\u00eda.',
+    queEs: 'Corteza natural proveniente de la Amazon\u00eda.',
+    paraQueSirve: 'Uso tradicional en infusiones.',
+    beneficios: ['Producto natural', 'Tradici\u00f3n amaz\u00f3nica', 'F\u00e1cil preparaci\u00f3n'],
+    formaDeUso: 'Preparar en infusi\u00f3n.',
+    presentacion: 'Bolsa de 150g',
+    infoComplementaria: 'Corteza seleccionada de la Amazon\u00eda peruana.'
+  },
+  'T\u00e9 de Coca': {
+    category: 'Infusiones',
+    description: 'Infusi\u00f3n elaborada con hoja de coca.',
+    queEs: 'Infusi\u00f3n elaborada con hoja de coca.',
+    paraQueSirve: 'Bebida tradicional andina.',
+    beneficios: ['F\u00e1cil preparaci\u00f3n', 'Aroma caracter\u00edstico', 'Producto tradicional'],
+    formaDeUso: 'Colocar una bolsita en agua caliente.',
+    presentacion: 'Caja de 25 bolsitas',
+    infoComplementaria: 'Hojas de coca seleccionadas de los valles del Cusco.'
+  },
+  'Pomada': {
+    category: 'Cosm\u00e9tica',
+    description: 'Pomada cosm\u00e9tica natural elaborada con arcilla.',
+    queEs: 'Pomada cosm\u00e9tica natural elaborada con arcilla.',
+    paraQueSirve: 'Uso cosm\u00e9tico externo.',
+    beneficios: ['Ingredientes naturales', 'F\u00e1cil aplicaci\u00f3n', 'Producto artesanal'],
+    formaDeUso: 'Aplicar sobre la piel seg\u00fan necesidad.',
+    presentacion: 'Envase de 100g',
+    infoComplementaria: 'Elaborada con arcilla natural y ingredientes org\u00e1nicos.'
+  },
+  'Eucalipto': {
+    category: 'Aromaterapia',
+    description: 'Aceite esencial concentrado de eucalipto.',
+    queEs: 'Aceite esencial concentrado de eucalipto.',
+    paraQueSirve: 'Uso arom\u00e1tico y cosm\u00e9tico.',
+    beneficios: ['Aroma fresco', 'F\u00e1cil aplicaci\u00f3n', 'Producto natural'],
+    formaDeUso: 'Utilizar seg\u00fan indicaciones del envase.',
+    presentacion: 'Frasco de 30ml',
+    infoComplementaria: 'Aceite esencial puro, sin aditivos.'
+  },
+  'Manzanilla': {
+    category: 'Infusiones',
+    description: 'Infusi\u00f3n natural de flores de manzanilla.',
+    queEs: 'Infusi\u00f3n natural de flores de manzanilla.',
+    paraQueSirve: 'Bebida tradicional de consumo diario.',
+    beneficios: ['Aroma suave', 'F\u00e1cil preparaci\u00f3n', 'Producto natural'],
+    formaDeUso: 'Preparar con agua caliente.',
+    presentacion: 'Caja de 20 sobres',
+    infoComplementaria: 'Flores de manzanilla seleccionadas.'
+  },
+  'Cal\u00e9ndula': {
+    category: 'Cosm\u00e9tica',
+    description: 'Crema hidratante elaborada con cal\u00e9ndula.',
+    queEs: 'Crema hidratante elaborada con cal\u00e9ndula.',
+    paraQueSirve: 'Cuidado e hidrataci\u00f3n de la piel.',
+    beneficios: ['Textura suave', 'Uso diario', 'Ingredientes naturales'],
+    formaDeUso: 'Aplicar sobre las manos limpias.',
+    presentacion: 'Tubo de 75ml',
+    infoComplementaria: 'F\u00f3rmula con extracto natural de cal\u00e9ndula.'
+  }
+};
+
+function getProductImage(productName) {
+  const map = [
+    { key: 'Miel de Abeja', file: 'Miel de Abeja.png' },
+    { key: 'Mu\u00f1a Andina', file: 'Mu\u00f1a Andina.png' },
+    { key: 'Maca', file: 'Maca en Polvo.png' },
+    { key: 'Quinua', file: 'Quinua Premium.png' },
+    { key: 'U\u00f1a de Gato', file: 'U\u00f1a de Gato.png' },
+    { key: 'T\u00e9 de Coca', file: 'T\u00e9 de Coca.png' },
+    { key: 'Manzanilla', file: 'Manzanilla.png' },
+    { key: 'Hierba Luisa', file: 'Hierba Luisa.png' },
+    { key: 'Jarabe', file: 'Jarabe Natural.png' },
+    { key: 'Prop\u00f3leo', file: 'Prop\u00f3leo.png' }
+  ];
+  const lower = productName.toLowerCase();
+  for (const entry of map) {
+    if (lower.includes(entry.key.toLowerCase())) {
+      return 'imagenes_productos_fondo_logo/' + encodeURI(entry.file);
+    }
+  }
+  return null;
+}
+
 function renderProducts() {
   const filtered = getFilteredProducts();
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE) || 1;
@@ -380,12 +505,14 @@ function renderProducts() {
     tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--on-surface-variant);">No se encontraron productos</td></tr>';
   } else {
     tbody.innerHTML = pageItems.map(p => {
-      const icons = ['eco', 'grass', 'spa', 'local_florist', 'psychology_alt', 'water_drop', 'science', 'filter_vintage', 'grain', 'park'];
-      const icon = icons[(p.id || 0) % icons.length];
+      const imgSrc = getProductImage(p.nombre);
+      const imgHtml = imgSrc
+        ? '<img src="' + imgSrc + '" alt="' + p.nombre.replace(/"/g,'&quot;') + '" loading="lazy" onerror="this.parentElement.innerHTML=\'<span class=material-icons style=font-size:24px;color:var(--primary)>eco</span>\'">'
+        : '<span class="material-icons" style="font-size:24px;color:var(--primary);">eco</span>';
       const badgeClass = p.estado === 'disponible' ? 'badge-success' : p.estado === 'bajo_stock' ? 'badge-warning' : 'badge-danger';
       const badgeText = p.estado === 'disponible' ? 'Disponible' : p.estado === 'bajo_stock' ? 'Stock Bajo' : 'Agotado';
       return '<tr>' +
-        '<td><div class="table-product-cell"><div class="table-product-icon"><span class="material-icons">' + icon + '</span></div><div class="table-product-info"><p>' + p.nombre + '</p><p>' + (p.codigo || 'SKU-' + String(p.id).padStart(4, '0')) + '</p></div></div></td>' +
+        '<td><div class="table-product-cell"><div class="table-product-img" onclick="openProductInfo(' + p.id + ')">' + imgHtml + '</div><div class="table-product-info"><p><a href="javascript:void(0)" onclick="openProductInfo(' + p.id + ')" style="color:var(--primary);text-decoration:none;font-weight:600;">' + p.nombre + '</a></p><p>' + (p.codigo || 'SKU-' + String(p.id).padStart(4, '0')) + '</p></div></div></td>' +
         '<td><span class="category-tag">' + p.categoria + '</span></td>' +
         '<td class="text-right" style="font-size:14px;font-weight:600;">S/ ' + formatCurrency(p.precio) + '</td>' +
         '<td class="text-right" style="font-size:14px;font-weight:600;">' + p.stock + '</td>' +
@@ -430,6 +557,42 @@ function openProductModal(productId) {
 
 function closeModal(id) {
   document.getElementById(id).classList.remove('active');
+}
+
+function openProductInfo(productId) {
+  const p = products.find(pr => pr.id === productId);
+  if (!p) return;
+  const key = Object.keys(productInfoData).find(k => p.nombre.toLowerCase().includes(k.toLowerCase()));
+  const info = key ? productInfoData[key] : null;
+  if (!info) {
+    showToast('Informaci\u00f3n no disponible para este producto.', 'info');
+    return;
+  }
+  const imgSrc = getProductImage(p.nombre);
+  const imgHtml = imgSrc
+    ? '<img src="' + imgSrc + '" alt="' + p.nombre.replace(/"/g,'&quot;') + '">'
+    : '<span class="material-icons placeholder-icon">eco</span>';
+  document.getElementById('productInfoImage').innerHTML =
+    '<button class="product-info-close" onclick="closeProductInfo()"><span class="material-icons">close</span></button>' +
+    imgHtml;
+  document.getElementById('productInfoBody').innerHTML =
+    '<h2>' + p.nombre + '</h2>' +
+    '<span class="info-category">' + (p.categoria || 'General') + '</span>' +
+    '<p class="info-desc">' + info.description + '</p>' +
+    '<div class="info-section"><h4>\u00bfQu\u00e9 es?</h4><p>' + info.queEs + '</p></div>' +
+    '<div class="info-section"><h4>\u00bfPara qu\u00e9 sirve?</h4><p>' + info.paraQueSirve + '</p></div>' +
+    '<div class="info-section"><h4>Beneficios principales</h4><ul class="info-benefits">' +
+      info.beneficios.map(function(b) { return '<li>' + b + '</li>'; }).join('') +
+    '</ul></div>' +
+    '<div class="info-section"><h4>Forma de uso</h4><p>' + info.formaDeUso + '</p></div>' +
+    '<div class="info-section"><h4>Presentaci\u00f3n</h4><p>' + info.presentacion + '</p></div>' +
+    '<div class="info-section"><h4>Informaci\u00f3n complementaria</h4><p>' + info.infoComplementaria + '</p></div>' +
+    '<button class="product-info-back" onclick="closeProductInfo()">Volver</button>';
+  document.getElementById('productInfoOverlay').classList.add('active');
+}
+
+function closeProductInfo() {
+  document.getElementById('productInfoOverlay').classList.remove('active');
 }
 
 function setupModals() {
@@ -524,6 +687,10 @@ function setupModals() {
     el.addEventListener('click', (e) => {
       if (e.target === el) el.classList.remove('active');
     });
+  });
+
+  document.getElementById('productInfoOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeProductInfo();
   });
 }
 
