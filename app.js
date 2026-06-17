@@ -252,6 +252,9 @@ function loadDashboard() {
   const todaySales = sales.filter(s => isToday(new Date(s.created_at)));
   const daySalesTotal = todaySales.reduce((sum, s) => sum + (parseFloat(s.total) || 0), 0);
 
+  const availablePct = total > 0 ? Math.round(((total - lowStock - outOfStock) / total) * 100) : 0;
+  const stockHealth = lowStock + outOfStock;
+
   document.getElementById('dashTotalProducts').textContent = total;
   document.getElementById('dashLowStock').textContent = lowStock;
   document.getElementById('dashOutOfStock').textContent = outOfStock;
@@ -259,24 +262,24 @@ function loadDashboard() {
   document.getElementById('dashTotalMovements').textContent = totalMovements;
   document.getElementById('dashDaySales').textContent = 'S/ ' + formatCurrency(daySalesTotal);
 
-  document.getElementById('dashProdTrend').textContent = total + ' total';
-  document.getElementById('dashLowStockTrend').textContent = lowStock + ' críticos';
-  document.getElementById('dashOutTrend').textContent = outOfStock + ' agotados';
-  document.getElementById('dashValueTrend').textContent = 'S/ ' + formatCurrency(totalValue);
-  document.getElementById('dashSalesTrend').textContent = 'S/ ' + formatCurrency(daySalesTotal);
+  document.getElementById('dashProdTrend').innerHTML = availablePct + '% disponible';
+  document.getElementById('dashLowStockTrend').innerHTML = lowStock + ' cr\u00edticos';
+  document.getElementById('dashOutTrend').innerHTML = outOfStock + ' agotados';
+  document.getElementById('dashValueTrend').innerHTML = movements.length + ' movimientos';
+  document.getElementById('dashSalesTrend').innerHTML = todaySales.length + ' ventas hoy';
 
   const statGrid = document.getElementById('dashboardStats');
   const extraStats = statGrid.querySelectorAll('.stat-card-extra');
   extraStats.forEach(el => el.remove());
 
   const extras = [
-    { icon: 'people', label: 'Clientes', value: totalClients },
-    { icon: 'local_shipping', label: 'Proveedores', value: totalSuppliers }
+    { icon: 'people', label: 'Clientes', value: totalClients, trend: 'Registrados' },
+    { icon: 'local_shipping', label: 'Proveedores', value: totalSuppliers, trend: 'Asociados' }
   ];
   extras.forEach(ex => {
     const div = document.createElement('div');
     div.className = 'stat-card stat-card-extra';
-    div.innerHTML = '<div class="stat-card-header"><div class="stat-icon"><span class="material-icons">' + ex.icon + '</span></div></div><p class="stat-label">' + ex.label + '</p><p class="stat-value">' + ex.value + '</p>';
+    div.innerHTML = '<div class="stat-card-header"><div class="stat-icon"><span class="material-icons">' + ex.icon + '</span></div><span class="stat-trend neutral">' + ex.trend + '</span></div><p class="stat-label">' + ex.label + '</p><p class="stat-value">' + ex.value + '</p>';
     statGrid.appendChild(div);
   });
 
@@ -507,27 +510,36 @@ function renderProducts() {
   catFilter.innerHTML = '<option value="">Todas las categorías</option>' +
     cats.map(c => '<option value="' + c + '"' + (c === productFilterCategory ? ' selected' : '') + '>' + c + '</option>').join('');
 
-  const tbody = document.getElementById('productsTableBody');
+  const grid = document.getElementById('productsGrid');
   if (pageItems.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:24px;color:var(--on-surface-variant);">No se encontraron productos</td></tr>';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--on-surface-variant);"><span class="material-icons" style="font-size:48px;opacity:0.3;margin-bottom:16px;">inventory_2</span><p style="font-size:16px;font-weight:500;">No se encontraron productos</p><p style="font-size:14px;margin-top:4px;">Intenta con otros filtros o agrega un nuevo producto</p></div>';
   } else {
-    tbody.innerHTML = pageItems.map(p => {
+    grid.innerHTML = pageItems.map(p => {
       const imgSrc = getProductImage(p.nombre);
       const imgHtml = imgSrc
-        ? '<img src="' + imgSrc + '" alt="' + p.nombre.replace(/"/g,'&quot;') + '" loading="lazy" onerror="this.parentElement.innerHTML=\'<span class=material-icons style=font-size:24px;color:var(--primary)>eco</span>\'">'
-        : '<span class="material-icons" style="font-size:24px;color:var(--primary);">eco</span>';
+        ? '<img src="' + imgSrc + '" alt="' + p.nombre.replace(/"/g,'&quot;') + '" loading="lazy" onerror="this.outerHTML=\'<span class=material-icons placeholder-icon>eco</span>\'">'
+        : '<span class="material-icons placeholder-icon">eco</span>';
       const badgeClass = p.estado === 'disponible' ? 'badge-success' : p.estado === 'bajo_stock' ? 'badge-warning' : 'badge-danger';
       const badgeText = p.estado === 'disponible' ? 'Disponible' : p.estado === 'bajo_stock' ? 'Stock Bajo' : 'Agotado';
-      return '<tr>' +
-        '<td><div class="table-product-cell"><div class="table-product-img" onclick="openProductInfo(' + p.id + ')">' + imgHtml + '</div><div class="table-product-info"><p><a href="javascript:void(0)" onclick="openProductInfo(' + p.id + ')" style="color:var(--primary);text-decoration:none;font-weight:600;">' + p.nombre + '</a></p><p>' + (p.codigo || 'SKU-' + String(p.id).padStart(4, '0')) + '</p></div></div></td>' +
-        '<td><span class="category-tag">' + p.categoria + '</span></td>' +
-        '<td class="text-right" style="font-size:14px;font-weight:600;">S/ ' + formatCurrency(p.precio) + '</td>' +
-        '<td class="text-right" style="font-size:14px;font-weight:600;">' + p.stock + '</td>' +
-        '<td><span class="badge ' + badgeClass + '"><span class="badge-dot"></span> ' + badgeText + '</span></td>' +
-        '<td class="text-center"><div class="table-actions">' +
-          '<button class="btn-edit" onclick="editProduct(' + p.id + ')" title="Editar"><span class="material-icons">edit</span></button>' +
-          '<button class="btn-delete" onclick="deleteProduct(' + p.id + ')" title="Eliminar"><span class="material-icons">delete</span></button>' +
-        '</div></td></tr>';
+      return '<div class="product-card">' +
+        '<div class="product-card-image" onclick="openProductInfo(' + p.id + ')">' + imgHtml +
+          '<div class="product-card-actions">' +
+            '<button class="btn-edit" onclick="event.stopPropagation();editProduct(' + p.id + ')" title="Editar"><span class="material-icons">edit</span></button>' +
+            '<button class="btn-delete" onclick="event.stopPropagation();deleteProduct(' + p.id + ')" title="Eliminar"><span class="material-icons">delete</span></button>' +
+          '</div>' +
+        '</div>' +
+        '<div class="product-card-body">' +
+          '<span class="product-card-category">' + p.categoria + '</span>' +
+          '<h3 class="product-card-name"><a href="javascript:void(0)" onclick="openProductInfo(' + p.id + ')">' + p.nombre + '</a></h3>' +
+          '<div class="product-card-footer">' +
+            '<span class="product-card-price">S/ ' + formatCurrency(p.precio) + '</span>' +
+            '<span class="product-card-stock">' + p.stock + ' und</span>' +
+          '</div>' +
+          '<div class="product-card-status">' +
+            '<span class="badge ' + badgeClass + '"><span class="badge-dot"></span> ' + badgeText + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
     }).join('');
   }
   document.getElementById('productPaginationInfo').textContent =
@@ -579,21 +591,35 @@ function openProductInfo(productId) {
   const imgHtml = imgSrc
     ? '<img src="' + imgSrc + '" alt="' + p.nombre.replace(/"/g,'&quot;') + '">'
     : '<span class="material-icons placeholder-icon">eco</span>';
+
+  const badgeClass = p.estado === 'disponible' ? 'badge-success' : p.estado === 'bajo_stock' ? 'badge-warning' : 'badge-danger';
+  const badgeText = p.estado === 'disponible' ? 'Disponible' : p.estado === 'bajo_stock' ? 'Stock Bajo' : 'Agotado';
+
   document.getElementById('productInfoImage').innerHTML =
-    '<button class="product-info-close" onclick="closeProductInfo()"><span class="material-icons">close</span></button>' +
-    imgHtml;
+    imgHtml +
+    '<button class="product-info-close" onclick="closeProductInfo()"><span class="material-icons">close</span></button>';
+
   document.getElementById('productInfoBody').innerHTML =
-    '<h2>' + p.nombre + '</h2>' +
-    '<span class="info-category">' + (p.categoria || 'General') + '</span>' +
-    '<p class="info-desc">' + info.description + '</p>' +
-    '<div class="info-section"><h4>\u00bfQu\u00e9 es?</h4><p>' + info.queEs + '</p></div>' +
-    '<div class="info-section"><h4>\u00bfPara qu\u00e9 sirve?</h4><p>' + info.paraQueSirve + '</p></div>' +
-    '<div class="info-section"><h4>Beneficios principales</h4><ul class="info-benefits">' +
-      info.beneficios.map(function(b) { return '<li>' + b + '</li>'; }).join('') +
-    '</ul></div>' +
-    '<div class="info-section"><h4>Forma de uso</h4><p>' + info.formaDeUso + '</p></div>' +
-    '<div class="info-section"><h4>Presentaci\u00f3n</h4><p>' + info.presentacion + '</p></div>' +
-    '<div class="info-section"><h4>Informaci\u00f3n complementaria</h4><p>' + info.infoComplementaria + '</p></div>' +
+    '<div class="product-info-header">' +
+      '<span class="product-info-category">' + (p.categoria || 'General') + '</span>' +
+      '<h2>' + p.nombre + '</h2>' +
+      '<div class="product-info-price-row">' +
+        '<span class="product-info-price">S/ ' + formatCurrency(p.precio) + '</span>' +
+        '<span class="badge ' + badgeClass + '"><span class="badge-dot"></span> ' + badgeText + '</span>' +
+        '<span style="font-size:14px;font-weight:500;color:var(--on-surface-variant);margin-left:auto;">Stock: ' + p.stock + ' und</span>' +
+      '</div>' +
+    '</div>' +
+    '<p class="product-info-desc">' + info.description + '</p>' +
+    '<div class="product-info-sections">' +
+      '<div class="info-section"><h4>\u00bfQu\u00e9 es?</h4><p>' + info.queEs + '</p></div>' +
+      '<div class="info-section"><h4>\u00bfPara qu\u00e9 sirve?</h4><p>' + info.paraQueSirve + '</p></div>' +
+      '<div class="info-section"><h4>Beneficios principales</h4><ul class="product-info-benefits">' +
+        info.beneficios.map(function(b) { return '<li>' + b + '</li>'; }).join('') +
+      '</ul></div>' +
+      '<div class="info-section"><h4>Forma de uso</h4><p>' + info.formaDeUso + '</p></div>' +
+      '<div class="info-section"><h4>Presentaci\u00f3n</h4><p>' + info.presentacion + '</p></div>' +
+      '<div class="info-section"><h4>Informaci\u00f3n complementaria</h4><p>' + info.infoComplementaria + '</p></div>' +
+    '</div>' +
     '<button class="product-info-back" onclick="closeProductInfo()">Volver</button>';
   document.getElementById('productInfoOverlay').classList.add('active');
 }

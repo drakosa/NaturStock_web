@@ -71,9 +71,12 @@
 
   <aside id="sidebar" class="sidebar">
     <div class="sidebar-brand">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
-        <img src="imagenes_productos_fondo_logo/logo.png" alt="NaturaStock Cusco" style="height:44px;width:auto;object-fit:contain;border-radius:8px;">
-        <div><h1>NaturaStock Cusco</h1><p>Enterprise Logistics</p></div>
+      <div>
+        <img src="imagenes_productos_fondo_logo/logo.png" alt="NaturaStock Cusco">
+        <div class="brand-text">
+          <span class="brand-name">NaturaStock</span>
+          <span class="brand-sublime">Inventario inteligente</span>
+        </div>
       </div>
     </div>
     <nav class="sidebar-nav">
@@ -98,15 +101,15 @@
         <button class="mobile-menu-toggle" id="menuToggle"><span class="material-icons">menu</span></button>
         <div class="topbar-search">
           <span class="material-icons" style="font-size:20px;color:var(--on-surface-variant);">search</span>
-          <input type="text" id="globalSearch" placeholder="Buscar productos...">
+          <input type="text" id="globalSearch" placeholder="Buscar productos, categor&iacute;as...">
         </div>
       </div>
       <div class="topbar-actions">
-        <button><span class="material-icons">notifications</span></button>
-        <button><span class="material-icons">apps</span></button>
+        <button title="Notificaciones"><span class="material-icons">notifications_none</span></button>
+        <button title="Aplicaciones"><span class="material-icons">apps</span></button>
         <div class="topbar-user">
           <div class="user-info-small"><p>Admin</p><p>Administrador</p></div>
-          <div class="topbar-avatar"><span class="material-icons" style="font-size:24px;">person</span></div>
+          <div class="topbar-avatar"><span class="material-icons">person</span></div>
         </div>
       </div>
     </header>
@@ -154,23 +157,19 @@
           <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">payments</span></div></div><p class="stat-label">Valor Inventario</p><p class="stat-value" id="prodValue">S/ 0.00</p></div>
           <div class="stat-card"><div class="stat-card-header"><div class="stat-icon"><span class="material-icons">category</span></div></div><p class="stat-label">Categor&iacute;as</p><p class="stat-value" id="prodCategories">0</p></div>
         </div>
-        <div class="table-container">
-          <div class="table-header">
-            <h3>Listado de Productos</h3>
-            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
-              <select id="filterCategory" style="padding:6px 12px;border:1px solid var(--outline-variant);border-radius:var(--radius-md);font-size:14px;font-family:var(--font-family);background:var(--surface-container-lowest);"><option value="">Todas las categor&iacute;as</option></select>
-              <select id="filterStatus" style="padding:6px 12px;border:1px solid var(--outline-variant);border-radius:var(--radius-md);font-size:14px;font-family:var(--font-family);background:var(--surface-container-lowest);"><option value="">Todos los estados</option><option value="disponible">Disponible</option><option value="bajo_stock">Stock Bajo</option><option value="agotado">Agotado</option></select>
-            </div>
+        <div class="product-grid-header">
+          <h3>Cat&aacute;logo de Productos</h3>
+          <div class="product-grid-filters">
+            <select id="filterCategory"><option value="">Todas las categor&iacute;as</option></select>
+            <select id="filterStatus"><option value="">Todos los estados</option><option value="disponible">Disponible</option><option value="bajo_stock">Stock Bajo</option><option value="agotado">Agotado</option></select>
           </div>
-          <div class="table-wrapper">
-            <table><thead><tr><th>Nombre</th><th>Categor&iacute;a</th><th class="text-right">Precio</th><th class="text-right">Stock</th><th>Estado</th><th class="text-center">Acciones</th></tr></thead>
-              <tbody id="productsTableBody"><tr><td colspan="6" style="text-align:center;padding:24px;color:var(--on-surface-variant);">Cargando productos...</td></tr></tbody>
-            </table>
-          </div>
-          <div class="table-pagination">
-            <span id="productPaginationInfo">Mostrando 0 productos</span>
-            <div class="pagination-buttons" id="productPagination"></div>
-          </div>
+        </div>
+        <div id="productsGrid" class="product-grid">
+          <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--on-surface-variant);">Cargando productos...</div>
+        </div>
+        <div class="product-grid-footer">
+          <span id="productPaginationInfo">Mostrando 0 productos</span>
+          <div class="pagination-buttons" id="productPagination"></div>
         </div>
       </section>
 
@@ -553,10 +552,10 @@
 <!-- PRODUCT INFO CARD -->
 <div id="productInfoOverlay" class="product-info-overlay">
   <div class="product-info-card" id="productInfoCard">
-    <div class="product-info-img-wrap" id="productInfoImage">
+    <div class="product-info-hero" id="productInfoImage">
       <button class="product-info-close" onclick="closeProductInfo()"><span class="material-icons">close</span></button>
     </div>
-    <div class="product-info-body" id="productInfoBody"></div>
+    <div class="product-info-content" id="productInfoBody"></div>
   </div>
 </div>
 
