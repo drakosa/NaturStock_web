@@ -51,10 +51,22 @@ CREATE TABLE IF NOT EXISTS productos (
     stock INTEGER NOT NULL DEFAULT 0,
     stock_minimo INTEGER NOT NULL DEFAULT 5,
     descripcion TEXT,
+    image_url TEXT,
     estado VARCHAR(20) NOT NULL DEFAULT 'disponible',
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Add image_url column if not exists (for existing databases)
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'productos' AND column_name = 'image_url'
+    ) THEN
+        ALTER TABLE productos ADD COLUMN image_url TEXT;
+    END IF;
+END $$;
 
 -- 5. CLIENTES
 CREATE TABLE IF NOT EXISTS clientes (

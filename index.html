@@ -381,6 +381,17 @@
           </div>
           <div class="form-group"><label>Stock M&iacute;nimo</label><input type="number" id="prodMinStock" placeholder="5" min="0" value="5"></div>
           <div style="grid-column:1/-1;"><div class="form-group"><label>Descripci&oacute;n</label><textarea id="prodDesc" placeholder="Describa las propiedades y el origen del producto..." rows="3"></textarea></div></div>
+          <div style="grid-column:1/-1;">
+            <div class="form-group">
+              <label>URL de Imagen</label>
+              <input type="text" id="prodImageUrl" placeholder="https://ejemplo.com/miel.jpg">
+              <small style="color:var(--on-surface-variant);font-size:12px;margin-top:4px;display:block;">Pega aquí el enlace directo de la imagen del producto.</small>
+            </div>
+            <div id="imagePreviewContainer" class="image-preview-container" style="display:none;">
+              <img id="imagePreview" class="image-preview" src="" alt="Vista previa">
+              <span class="image-preview-hint">Vista previa</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">

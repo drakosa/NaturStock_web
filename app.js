@@ -169,6 +169,7 @@ async function loadData() {
 function normalizeProduct(p) {
   return {
     ...p,
+    image_url: p.image_url || null,
     categoria: p.categorias?.nombre || '',
     proveedor: p.proveedores?.nombre || '',
     categoria_nombre: p.categorias?.nombre || '',
@@ -198,16 +199,16 @@ function loadExampleData() {
     { id: 4, nombre: 'Botica Natural EIRL', tipo_documento: 'RUC', numero_documento: '20234567890', telefono: '+51 987 654 324', email: 'info@boticanatural.pe', direccion: 'Av. El Sol 321, Cusco' }
   ];
   products = [
-    { id: 1, codigo: 'SKU-0001', nombre: 'Miel de Abeja Pura 500ml', categoria_id: 4, proveedor_id: 3, categoria: 'Mieles', proveedor: 'Mieles del Sur SAC', precio: 25.00, stock: 120, stock_minimo: 10, descripcion: 'Miel de abeja 100% natural de los valles de Cusco.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 2, codigo: 'SKU-0002', nombre: 'Muña Andina 100g', categoria_id: 3, proveedor_id: 1, categoria: 'Hierbas', proveedor: 'Hierbas del Valle SRL', precio: 8.50, stock: 200, stock_minimo: 15, descripcion: 'Hierba aromática andina tradicional.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 3, codigo: 'SKU-0003', nombre: 'Maca Negra en Polvo 250g', categoria_id: 2, proveedor_id: 2, categoria: 'Suplementos', proveedor: 'Andean Naturals EIRL', precio: 18.00, stock: 5, stock_minimo: 8, descripcion: 'Maca negra orgánica de Junín.', estado: 'bajo_stock', created_at: new Date().toISOString() },
-    { id: 4, codigo: 'SKU-0004', nombre: 'Quinua Real Orgánica 1kg', categoria_id: 2, proveedor_id: 2, categoria: 'Suplementos', proveedor: 'Andean Naturals EIRL', precio: 12.00, stock: 0, stock_minimo: 10, descripcion: 'Quinua real orgánica del Altiplano.', estado: 'agotado', created_at: new Date().toISOString() },
-    { id: 5, codigo: 'SKU-0005', nombre: 'Uña de Gato Corteza 150g', categoria_id: 5, proveedor_id: 1, categoria: 'Medicinales', proveedor: 'Hierbas del Valle SRL', precio: 15.00, stock: 60, stock_minimo: 5, descripcion: 'Corteza de uña de gato amazónica.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 6, codigo: 'SKU-0006', nombre: 'Té de Coca 25 bolsitas', categoria_id: 1, proveedor_id: 1, categoria: 'Infusiones', proveedor: 'Hierbas del Valle SRL', precio: 6.50, stock: 300, stock_minimo: 20, descripcion: 'Té de hoja de coca tradicional.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 7, codigo: 'SKU-0007', nombre: 'Pomada Natural de Arcilla 100g', categoria_id: 6, proveedor_id: 4, categoria: 'Cosmética natural', proveedor: 'Cosmética Nativa', precio: 22.00, stock: 30, stock_minimo: 5, descripcion: 'Pomada de arcilla con hierbas andinas.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 8, codigo: 'SKU-0008', nombre: 'Aceite Esencial de Eucalipto 30ml', categoria_id: 5, proveedor_id: 4, categoria: 'Medicinales', proveedor: 'Cosmética Nativa', precio: 28.00, stock: 2, stock_minimo: 5, descripcion: 'Aceite esencial puro de eucalipto.', estado: 'bajo_stock', created_at: new Date().toISOString() },
-    { id: 9, codigo: 'SKU-0009', nombre: 'Infusión de Manzanilla 20 sobres', categoria_id: 1, proveedor_id: 1, categoria: 'Infusiones', proveedor: 'Hierbas del Valle SRL', precio: 5.00, stock: 250, stock_minimo: 15, descripcion: 'Manzanilla orgánica del Valle Sagrado.', estado: 'disponible', created_at: new Date().toISOString() },
-    { id: 10, codigo: 'SKU-0010', nombre: 'Crema de Mano de Caléndula 75ml', categoria_id: 6, proveedor_id: 4, categoria: 'Cosmética natural', proveedor: 'Cosmética Nativa', precio: 19.00, stock: 40, stock_minimo: 8, descripcion: 'Crema hidratante con caléndula y aceites naturales.', estado: 'disponible', created_at: new Date().toISOString() }
+    { id: 1, codigo: 'SKU-0001', nombre: 'Miel de Abeja Pura 500ml', categoria_id: 4, proveedor_id: 3, categoria: 'Mieles', proveedor: 'Mieles del Sur SAC', precio: 25.00, stock: 120, stock_minimo: 10, descripcion: 'Miel de abeja 100% natural de los valles de Cusco.', image_url: null, estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 2, codigo: 'SKU-0002', nombre: 'Muña Andina 100g', categoria_id: 3, proveedor_id: 1, categoria: 'Hierbas', proveedor: 'Hierbas del Valle SRL', precio: 8.50, stock: 200, stock_minimo: 15, descripcion: 'Hierba aromática andina tradicional.', image_url: null, estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 3, codigo: 'SKU-0003', nombre: 'Maca Negra en Polvo 250g', categoria_id: 2, proveedor_id: 2, categoria: 'Suplementos', proveedor: 'Andean Naturals EIRL', precio: 18.00, stock: 5, stock_minimo: 8, descripcion: 'Maca negra orgánica de Junín.', image_url: null, estado: 'bajo_stock', created_at: new Date().toISOString() },
+    { id: 4, codigo: 'SKU-0004', nombre: 'Quinua Real Orgánica 1kg', categoria_id: 2, proveedor_id: 2, categoria: 'Suplementos', proveedor: 'Andean Naturals EIRL', precio: 12.00, stock: 0, stock_minimo: 10, descripcion: 'Quinua real orgánica del Altiplano.', image_url: null, estado: 'agotado', created_at: new Date().toISOString() },
+    { id: 5, codigo: 'SKU-0005', nombre: 'Uña de Gato Corteza 150g', categoria_id: 5, proveedor_id: 1, categoria: 'Medicinales', proveedor: 'Hierbas del Valle SRL', precio: 15.00, stock: 60, stock_minimo: 5, descripcion: 'Corteza de uña de gato amazónica.', image_url: null, estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 6, codigo: 'SKU-0006', nombre: 'Té de Coca 25 bolsitas', categoria_id: 1, proveedor_id: 1, categoria: 'Infusiones', proveedor: 'Hierbas del Valle SRL', precio: 6.50, stock: 300, stock_minimo: 20, descripcion: 'Té de hoja de coca tradicional.', image_url: null, estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 7, codigo: 'SKU-0007', nombre: 'Pomada Natural de Arcilla 100g', categoria_id: 6, proveedor_id: 4, categoria: 'Cosmética natural', proveedor: 'Cosmética Nativa', precio: 22.00, stock: 30, stock_minimo: 5, descripcion: 'Pomada de arcilla con hierbas andinas.', image_url: null, estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 8, codigo: 'SKU-0008', nombre: 'Aceite Esencial de Eucalipto 30ml', categoria_id: 5, proveedor_id: 4, categoria: 'Medicinales', proveedor: 'Cosmética Nativa', precio: 28.00, stock: 2, stock_minimo: 5, descripcion: 'Aceite esencial puro de eucalipto.', image_url: null, estado: 'bajo_stock', created_at: new Date().toISOString() },
+    { id: 9, codigo: 'SKU-0009', nombre: 'Infusión de Manzanilla 20 sobres', categoria_id: 1, proveedor_id: 1, categoria: 'Infusiones', proveedor: 'Hierbas del Valle SRL', precio: 5.00, stock: 250, stock_minimo: 15, descripcion: 'Manzanilla orgánica del Valle Sagrado.', image_url: null, estado: 'disponible', created_at: new Date().toISOString() },
+    { id: 10, codigo: 'SKU-0010', nombre: 'Crema de Mano de Caléndula 75ml', categoria_id: 6, proveedor_id: 4, categoria: 'Cosmética natural', proveedor: 'Cosmética Nativa', precio: 19.00, stock: 40, stock_minimo: 8, descripcion: 'Crema hidratante con caléndula y aceites naturales.', image_url: null, estado: 'disponible', created_at: new Date().toISOString() }
   ];
   sales = [
     { id: 1, cliente_id: 1, total: 56.00, tipo_comprobante: 'Boleta', numero_comprobante: 'V20240601-0001', created_at: new Date(Date.now() - 3600000).toISOString(), clientes: { nombre: 'Juan Pérez García' } },
@@ -515,7 +516,7 @@ function renderProducts() {
     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--on-surface-variant);"><span class="material-icons" style="font-size:48px;opacity:0.3;margin-bottom:16px;">inventory_2</span><p style="font-size:16px;font-weight:500;">No se encontraron productos</p><p style="font-size:14px;margin-top:4px;">Intenta con otros filtros o agrega un nuevo producto</p></div>';
   } else {
     grid.innerHTML = pageItems.map(p => {
-      const imgSrc = getProductImage(p.nombre);
+      const imgSrc = p.image_url || getProductImage(p.nombre);
       const imgHtml = imgSrc
         ? '<img src="' + imgSrc + '" alt="' + p.nombre.replace(/"/g,'&quot;') + '" loading="lazy" onerror="this.outerHTML=\'<span class=material-icons placeholder-icon>eco</span>\'">'
         : '<span class="material-icons placeholder-icon">eco</span>';
@@ -553,6 +554,7 @@ function openProductModal(productId) {
   const title = document.getElementById('productModalTitle');
   const form = document.getElementById('productForm');
   form.reset();
+  resetImagePreview();
 
   const catSelect = document.getElementById('prodCategory');
   catSelect.innerHTML = '<option value="">Seleccionar</option>' +
@@ -568,10 +570,42 @@ function openProductModal(productId) {
     document.getElementById('prodStock').value = p.stock;
     document.getElementById('prodMinStock').value = p.stock_minimo;
     document.getElementById('prodDesc').value = p.descripcion || '';
+    if (p.image_url) {
+      document.getElementById('prodImageUrl').value = p.image_url;
+      updateImagePreview(p.image_url);
+    }
   } else {
     title.textContent = 'Registrar Producto';
   }
   modal.classList.add('active');
+}
+
+function resetImagePreview() {
+  const container = document.getElementById('imagePreviewContainer');
+  const img = document.getElementById('imagePreview');
+  container.style.display = 'none';
+  container.classList.remove('has-image');
+  img.src = '';
+}
+
+function updateImagePreview(url) {
+  const container = document.getElementById('imagePreviewContainer');
+  const img = document.getElementById('imagePreview');
+  if (url && url.trim()) {
+    img.src = url.trim();
+    container.style.display = 'block';
+    container.classList.add('has-image');
+    img.onerror = function() {
+      img.src = '';
+      container.classList.remove('has-image');
+      img.alt = 'Error al cargar imagen';
+    };
+    img.onload = function() {
+      container.classList.add('has-image');
+    };
+  } else {
+    resetImagePreview();
+  }
 }
 
 function closeModal(id) {
@@ -587,9 +621,9 @@ function openProductInfo(productId) {
     showToast('Informaci\u00f3n no disponible para este producto.', 'info');
     return;
   }
-  const imgSrc = getProductImage(p.nombre);
+  const imgSrc = p.image_url || getProductImage(p.nombre);
   const imgHtml = imgSrc
-    ? '<img src="' + imgSrc + '" alt="' + p.nombre.replace(/"/g,'&quot;') + '">'
+    ? '<img src="' + imgSrc + '" alt="' + p.nombre.replace(/"/g,'&quot;') + '" onerror="this.outerHTML=\'<span class=material-icons placeholder-icon style=font-size:64px;color:var(--primary);opacity:0.25;>eco</span>\'">'
     : '<span class="material-icons placeholder-icon">eco</span>';
 
   const badgeClass = p.estado === 'disponible' ? 'badge-success' : p.estado === 'bajo_stock' ? 'badge-warning' : 'badge-danger';
@@ -633,13 +667,15 @@ function setupModals() {
     e.preventDefault();
     const catName = document.getElementById('prodCategory').value;
     const cat = categories.find(c => c.nombre === catName);
+    const imageUrl = document.getElementById('prodImageUrl').value.trim() || null;
     const data = {
       nombre: document.getElementById('prodName').value.trim(),
       categoria_id: cat ? cat.id : null,
       precio: parseFloat(document.getElementById('prodPrice').value) || 0,
       stock: parseInt(document.getElementById('prodStock').value) || 0,
       stock_minimo: parseInt(document.getElementById('prodMinStock').value) || 5,
-      descripcion: document.getElementById('prodDesc').value.trim()
+      descripcion: document.getElementById('prodDesc').value.trim(),
+      image_url: imageUrl
     };
     if (editingProductId) {
       await updateProduct(editingProductId, data);
@@ -725,6 +761,10 @@ function setupModals() {
   document.getElementById('productInfoOverlay').addEventListener('click', function(e) {
     if (e.target === this) closeProductInfo();
   });
+
+  document.getElementById('prodImageUrl').addEventListener('input', function(e) {
+    updateImagePreview(e.target.value);
+  });
 }
 
 async function createProduct(data) {
@@ -753,6 +793,7 @@ function addLocalProduct(data) {
     id: newId,
     codigo: 'SKU-' + String(newId).padStart(4, '0'),
     ...data,
+    image_url: data.image_url || null,
     categoria: cat ? cat.nombre : '',
     proveedor: '',
     estado,
@@ -761,9 +802,11 @@ function addLocalProduct(data) {
 }
 
 async function updateProduct(id, data) {
+  const updateData = { ...data };
+  if (updateData.image_url === '') updateData.image_url = null;
   if (!isOffline) {
     try {
-      const { error } = await supabaseClient.from('productos').update(data).eq('id', id);
+      const { error } = await supabaseClient.from('productos').update(updateData).eq('id', id);
       if (error) throw error;
     } catch (e) {
       showToast('Error al actualizar en Supabase.', 'error');
@@ -772,7 +815,7 @@ async function updateProduct(id, data) {
   const idx = products.findIndex(p => p.id === id);
   if (idx !== -1) {
     const cat = categories.find(c => c.id === data.categoria_id);
-    products[idx] = { ...products[idx], ...data, categoria: cat ? cat.nombre : products[idx].categoria };
+    products[idx] = { ...products[idx], ...updateData, categoria: cat ? cat.nombre : products[idx].categoria };
     products[idx].estado = data.stock === 0 ? 'agotado' : data.stock <= data.stock_minimo ? 'bajo_stock' : 'disponible';
   }
   showToast('Producto actualizado correctamente', 'success');
